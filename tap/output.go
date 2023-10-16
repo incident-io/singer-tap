@@ -32,6 +32,8 @@ type Output struct {
 	Schema *Schema `json:"schema,omitempty"`
 	// Record is a record from the stream, if Type == "RECORD".
 	Record map[string]any `json:"record,omitempty"`
+	// TimeExtracted is the time that this record was extracted, if Type == "RECORD".
+	TimeExtracted string `json:"time_extracted,omitempty"`
 	// KeyProperties is a list of strings indicating which properties make up the primary
 	// key for this stream.
 	//

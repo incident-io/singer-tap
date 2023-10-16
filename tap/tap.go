@@ -17,8 +17,8 @@ func Run(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *client
 			return err
 		}
 
-		start := time.Now()
-		logger.Log("msg", "loading records", "start", start.Format(time.RFC3339))
+		timeExtracted := time.Now().Format(time.RFC3339)
+		logger.Log("msg", "loading records", "time_extracted", timeExtracted)
 		records, err := stream.GetRecords(ctx, logger, cl)
 		if err != nil {
 			return err
@@ -27,8 +27,10 @@ func Run(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *client
 		logger.Log("msg", "outputting records", "count", len(records))
 		for _, record := range records {
 			op := &Output{
-				Type:   OutputTypeRecord,
-				Record: record,
+				Type:          OutputTypeRecord,
+				Stream:        name,
+				Record:        record,
+				TimeExtracted: timeExtracted,
 			}
 			if err := ol.Log(op); err != nil {
 				return err

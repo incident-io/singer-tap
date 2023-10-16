@@ -1,0 +1,63 @@
+name: Build
+
+on: [push]
+
+# We need this so we can tag our repo if the build succeeds and the version
+# doesn't match.
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      release: '${{ steps.tag.outputs.release }}'
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      -
+        name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+      -
+        name: Build
+        run: go run cmd/incident-tap/main.go --help
+      -
+        name: Install ginkgo
+        run: go install github.com/onsi/ginkgo/v2/ginkgo
+      -
+        name: Run tests
+        run: ginkgo -r .
+      -
+        id: tag
+        name: Tag if new version
+        run: |
+          CURRENT_VERSION="v$(cat cmd/incident-tap/cmd/VERSION)"
+          if [[ $(git tag -l "${CURRENT_VERSION}") == "${CURRENT_VERSION}" ]]; then
+            echo "Version ${CURRENT_VERSION} is already released"
+            exit 0
+          fi
+
+          git tag "${CURRENT_VERSION}"
+          git push --tags
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_PUBLISHER_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PUBLISHER_KEY }}
+      -
+        name: Run GoReleaser
+        continue-on-error: true
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}

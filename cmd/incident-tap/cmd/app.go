@@ -16,6 +16,7 @@ import (
 	"github.com/alecthomas/kingpin/v2"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
+	"github.com/incident-io/singer-tap/client"
 	"github.com/incident-io/singer-tap/config"
 	"github.com/incident-io/singer-tap/tap"
 	"github.com/pkg/errors"
@@ -45,7 +46,6 @@ func Run(ctx context.Context) (err error) {
 		logger = level.NewFilter(logger, level.AllowInfo())
 	}
 	logger = kitlog.With(logger, "ts", kitlog.DefaultTimestampUTC, "caller", kitlog.DefaultCaller)
-	logger = level.Debug(logger) // by default, logger is debug only
 	stdlog.SetOutput(kitlog.NewStdlibAdapter(logger))
 
 	// Root context to the application.
@@ -67,7 +67,19 @@ func Run(ctx context.Context) (err error) {
 		return err
 	}
 
-	err = tap.Run(ctx, logger, cfg)
+	if cfg.Endpoint == "" {
+		cfg.Endpoint = "https://api.incident.io"
+	}
+	cl, err := client.New(ctx, cfg.APIKey, cfg.Endpoint, Version())
+	if err != nil {
+		return err
+	}
+
+	// Singer requires taps to output to STDOUT. We log to STDERR so the debug log output
+	// can be streamed separately.
+	ol := tap.NewOutputLogger(os.Stdout)
+
+	err = tap.Run(ctx, logger, ol, cl)
 	if err != nil {
 		return err
 	}

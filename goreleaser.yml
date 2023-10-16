@@ -14,9 +14,9 @@ builds:
       - amd64
       - arm64
     ldflags: >
-      -X github.com/incident-io/incident-tap/cmd/incident-tap/cmd.Version={{.Version}}
-      -X github.com/incident-io/incident-tap/cmd/incident-tap/cmd.Commit={{.Commit}}
-      -X github.com/incident-io/incident-tap/cmd/incident-tap/cmd.Date={{.Date}}
+      -X github.com/incident-io/singer-tap/cmd/incident-tap/cmd.Version={{.Version}}
+      -X github.com/incident-io/singer-tap/cmd/incident-tap/cmd.Commit={{.Commit}}
+      -X github.com/incident-io/singer-tap/cmd/incident-tap/cmd.Date={{.Date}}
       -a
       -installsuffix cgo
     env:

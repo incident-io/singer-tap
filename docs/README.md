@@ -39,5 +39,5 @@ configure the tap that looks like this:
 You can check this works by running:
 
 ```console
-$ incident-tap --discover --config=config.json
+$ tap-incident --discover --config=config.json
 ```

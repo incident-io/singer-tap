@@ -2,11 +2,11 @@
 # https://goreleaser.com
 
 ---
-project_name: incident-tap
+project_name: tap-incident
 
 builds:
-  - binary: incident-tap
-    main: cmd/incident-tap/main.go
+  - binary: tap-incident
+    main: cmd/tap-incident/main.go
     goos:
       - darwin
       - linux
@@ -14,9 +14,9 @@ builds:
       - amd64
       - arm64
     ldflags: >
-      -X github.com/incident-io/singer-tap/cmd/incident-tap/cmd.Version={{.Version}}
-      -X github.com/incident-io/singer-tap/cmd/incident-tap/cmd.Commit={{.Commit}}
-      -X github.com/incident-io/singer-tap/cmd/incident-tap/cmd.Date={{.Date}}
+      -X github.com/incident-io/singer-tap/cmd/tap-incident/cmd.Version={{.Version}}
+      -X github.com/incident-io/singer-tap/cmd/tap-incident/cmd.Commit={{.Commit}}
+      -X github.com/incident-io/singer-tap/cmd/tap-incident/cmd.Date={{.Date}}
       -a
       -installsuffix cgo
     env:

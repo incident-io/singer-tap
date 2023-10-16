@@ -10,13 +10,13 @@ macOS users can install the catalog using brew:
 
 ```console
 brew tap incident-io/homebrew-taps
-brew install incident-tap
+brew install tap-incident
 ```
 
 Otherwise, ensure that the go runtime is installed and then:
 
 ```console
-go install github.com/incident-io/singer-tap/cmd/incident-tap@latest
+go install github.com/incident-io/singer-tap/cmd/tap-incident@latest
 ```
 
 Once installed, see [documentation](docs) for example configurations.

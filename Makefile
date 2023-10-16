@@ -1,4 +1,4 @@
-PROG=bin/incident-tap
+PROG=bin/tap-incident
 VERSION=$(shell git rev-parse --short HEAD)-dev
 BUILD_COMMAND=go build -ldflags "-s -w -X main.Version=$(VERSION)"
 

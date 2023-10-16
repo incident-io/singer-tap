@@ -25,7 +25,7 @@ import (
 var logger kitlog.Logger
 
 var (
-	app = kingpin.New("incident-tap", "Extract data from incident.io for use with Singer").Version(versionStanza())
+	app = kingpin.New("tap-incident", "Extract data from incident.io for use with Singer").Version(versionStanza())
 
 	// Global flags
 	debug       = app.Flag("debug", "Enable debug logging").Default("false").Bool()

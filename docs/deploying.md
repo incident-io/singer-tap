@@ -24,19 +24,19 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install incident-tap
+          name: Install tap-incident
           command: |
             VERSION="0.1.0"
 
             echo "Installing importer v${VERSION}..."
             curl -L \
-              -o "/tmp/incident-tap_${VERSION}_linux_amd64.tar.gz" \
-              "https://github.com/incident-io/singer-tap/releases/download/v${VERSION}/incident-tap_${VERSION}_linux_amd64.tar.gz"
-            tar zxf "/tmp/incident-tap_${VERSION}_linux_amd64.tar.gz" -C /tmp
+              -o "/tmp/tap-incident_${VERSION}_linux_amd64.tar.gz" \
+              "https://github.com/incident-io/singer-tap/releases/download/v${VERSION}/tap-incident_${VERSION}_linux_amd64.tar.gz"
+            tar zxf "/tmp/tap-incident_${VERSION}_linux_amd64.tar.gz" -C /tmp
       - run:
           name: Sync
           command: |
-            /tmp/incident-tap --config config.json
+            /tmp/tap-incident --config config.json
 
 workflows:
   version: 2
@@ -69,10 +69,10 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: "1.21"
-      - name: Install incident-tap
+      - name: Install tap-incident
         run: |
-          go install github.com/incident-io/singer-tap/cmd/incident-tap@latest
+          go install github.com/incident-io/singer-tap/cmd/tap-incident@latest
       - name: Sync
         run: |
-          incident-tap --config config.json
+          tap-incident --config config.json
 ```

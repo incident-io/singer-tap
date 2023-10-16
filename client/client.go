@@ -44,7 +44,7 @@ func New(ctx context.Context, apiKey, apiEndpoint, version string, opts ...Clien
 		WithRequestEditorFn(bearerTokenProvider.Intercept),
 		// Add a user-agent so we can tell which version these requests came from.
 		WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
-			req.Header.Add("user-agent", fmt.Sprintf("incident-tap/%s", version))
+			req.Header.Add("user-agent", fmt.Sprintf("tap-incident/%s", version))
 			return nil
 		}),
 	}, opts...)

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/alecthomas/kingpin/v2"
-	"github.com/incident-io/singer-tap/cmd/incident-tap/cmd"
+	"github.com/incident-io/singer-tap/cmd/tap-incident/cmd"
 )
 
 func main() {

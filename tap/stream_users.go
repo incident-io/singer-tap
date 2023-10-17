@@ -11,36 +11,36 @@ import (
 )
 
 func init() {
-	register(&StreamIncidents{})
+	register(&StreamUsers{})
 }
 
-type StreamIncidents struct {
+type StreamUsers struct {
 }
 
-func (s *StreamIncidents) Output() *Output {
+func (s *StreamUsers) Output() *Output {
 	return &Output{
 		Type:   OutputTypeSchema,
-		Stream: "incidents",
+		Stream: "users",
 		Schema: &model.Schema{
 			HasAdditionalProperties: false,
 			Type:                    []string{"object"},
-			Properties:              model.IncidentV2.Schema().Properties,
+			Properties:              model.UserV1.Schema().Properties,
 		},
 		KeyProperties:      []string{"id"},
 		BookmarkProperties: []string{},
 	}
 }
 
-func (s *StreamIncidents) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
+func (s *StreamUsers) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
 	var (
 		after    *string
-		pageSize = int64(250)
+		pageSize = 250
 		results  = []map[string]any{}
 	)
 
 	for {
 		logger.Log("msg", "loading page", "page_size", pageSize, "after", after)
-		page, err := cl.IncidentsV2ListWithResponse(ctx, &client.IncidentsV2ListParams{
+		page, err := cl.UsersV2ListWithResponse(ctx, &client.UsersV2ListParams{
 			PageSize: &pageSize,
 			After:    after,
 		})
@@ -48,13 +48,13 @@ func (s *StreamIncidents) GetRecords(ctx context.Context, logger kitlog.Logger, 
 			return nil, errors.Wrap(err, "listing incidents")
 		}
 
-		for _, element := range page.JSON200.Incidents {
-			results = append(results, model.IncidentV2.Serialize(element))
+		for _, element := range page.JSON200.Users {
+			results = append(results, model.UserV1.Serialize(element))
 		}
-		if count := len(page.JSON200.Incidents); count == 0 {
+		if count := len(page.JSON200.Users); count == 0 {
 			return results, nil // end pagination
 		} else {
-			after = lo.ToPtr(page.JSON200.Incidents[count-1].Id)
+			after = lo.ToPtr(page.JSON200.Users[count-1].Id)
 		}
 	}
 }

@@ -74,12 +74,12 @@ func DumpToMap(input interface{}) map[string]any {
 	return structs.Map(input)
 }
 
-func AsOptional(p Property) Property {
+func Optional(p Property) Property {
 	p.Types = append(p.Types, "null")
 	return p
 }
 
-func AsArray(p Property) Property {
+func ArrayOf(p Property) Property {
 	return Property{
 		Types: []string{"array"},
 		Items: &ArrayItem{

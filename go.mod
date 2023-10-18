@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/alecthomas/kingpin/v2 v2.3.2
 	github.com/deepmap/oapi-codegen v1.12.4
+	github.com/fatih/structs v1.1.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-kit/log v0.2.0
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible

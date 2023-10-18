@@ -8,7 +8,7 @@ import (
 	"github.com/incident-io/singer-tap/client"
 )
 
-func Run(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *client.ClientWithResponses) error {
+func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *client.ClientWithResponses) error {
 	for name, stream := range streams {
 		logger := kitlog.With(logger, "stream", name)
 
@@ -36,6 +36,16 @@ func Run(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *client
 				return err
 			}
 		}
+	}
+
+	return nil
+}
+
+func Discover(ctx context.Context, logger kitlog.Logger, ol *OutputLogger) error {
+	catalog := NewCatalog(streams)
+
+	if err := ol.CataLog(catalog); err != nil {
+		return err
 	}
 
 	return nil

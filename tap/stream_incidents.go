@@ -5,6 +5,7 @@ import (
 
 	kitlog "github.com/go-kit/log"
 	"github.com/incident-io/singer-tap/client"
+	"github.com/incident-io/singer-tap/model"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -20,9 +21,9 @@ func (s *StreamIncidents) Output() *Output {
 	return &Output{
 		Type:   OutputTypeSchema,
 		Stream: "incidents",
-		Schema: &Schema{
+		Schema: &model.Schema{
 			Type: []string{"object"},
-			Properties: map[string]Property{
+			Properties: map[string]model.Property{
 				"id": {
 					Types: []string{"string"},
 				},

@@ -28,9 +28,10 @@ var (
 	app = kingpin.New("tap-incident", "Extract data from incident.io for use with Singer").Version(versionStanza())
 
 	// Global flags
-	debug       = app.Flag("debug", "Enable debug logging").Default("false").Bool()
-	configFile  = app.Flag("config", "Configuration file").ExistingFile()
-	catalogFile = app.Flag("catalog", "If set, allows filtering which streams would be synced").ExistingFile()
+	debug         = app.Flag("debug", "Enable debug logging").Default("false").Bool()
+	configFile    = app.Flag("config", "Configuration file").ExistingFile()
+	catalogFile   = app.Flag("catalog", "If set, allows filtering which streams would be synced").ExistingFile()
+	discoveryMode = app.Flag("discover", "If set, only outputs the catalog and exits").Default("false").Bool()
 )
 
 func Run(ctx context.Context) (err error) {
@@ -79,7 +80,11 @@ func Run(ctx context.Context) (err error) {
 	// can be streamed separately.
 	ol := tap.NewOutputLogger(os.Stdout)
 
-	err = tap.Run(ctx, logger, ol, cl)
+	if *discoveryMode {
+		err = tap.Discover(ctx, logger, ol)
+	} else {
+		err = tap.Sync(ctx, logger, ol, cl)
+	}
 	if err != nil {
 		return err
 	}

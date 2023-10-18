@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"strings"
+
+	"github.com/incident-io/singer-tap/model"
 )
 
 // OutputType is the type of Singer tap output for each message.
@@ -29,7 +30,7 @@ type Output struct {
 	// Stream is the name of the stream, e.g. "users"
 	Stream string `json:"stream,omitempty"`
 	// Schema is the schema of the stream, if Type == "SCHEMA", in JSON schema format.
-	Schema *Schema `json:"schema,omitempty"`
+	Schema *model.Schema `json:"schema,omitempty"`
 	// Record is a record from the stream, if Type == "RECORD".
 	Record map[string]any `json:"record,omitempty"`
 	// TimeExtracted is the time that this record was extracted, if Type == "RECORD".
@@ -46,50 +47,6 @@ type Output struct {
 	BookmarkProperties []string `json:"bookmark_properties,omitempty"`
 }
 
-// Schema is a JSON schema for a stream.
-type Schema struct {
-	// Type is the type of the schema, e.g. "object"
-	Type []string `json:"type"`
-	// HasAdditionalProperties indicates whether the schema allows additional properties
-	// not defined in the schema.
-	HasAdditionalProperties bool `json:"additionalProperties"`
-	// Properties is a map of property names to their schema.
-	Properties map[string]Property `json:"properties"`
-}
-
-// Property is a property in a JSON schema.
-type Property struct {
-	// Types is a list of types that this property can be, e.g. "string" or "integer".
-	Types []string `json:"type"`
-	// CustomFormat	is a custom format for this property, e.g. "date-time".
-	CustomFormat string `json:"format,omitempty"`
-}
-
-func (s Property) IsBoolean() bool {
-	return s.hasType("boolean")
-}
-
-func (s Property) IsNumber() bool {
-	return s.hasType("number")
-}
-
-func (s Property) IsInteger() bool {
-	return s.hasType("integer")
-}
-
-func (s Property) hasType(typeName string) bool {
-	for _, t := range s.Types {
-		if strings.EqualFold(t, typeName) {
-			return true
-		}
-	}
-	return false
-}
-
-func (s Property) IsDateTime() bool {
-	return s.CustomFormat == "date-time"
-}
-
 // OutputLogger is a logger that logs to STDOUT in the format expected by the downstream
 // Singer target.
 type OutputLogger struct {
@@ -102,6 +59,20 @@ func NewOutputLogger(w io.Writer) *OutputLogger {
 
 func (o *OutputLogger) Log(op *Output) error {
 	data, err := json.Marshal(op)
+	if err != nil {
+		return err
+	}
+
+	_, err = fmt.Fprintln(o.w, string(data))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (o *OutputLogger) CataLog(catalog *Catalog) error {
+	data, err := json.Marshal(catalog)
 	if err != nil {
 		return err
 	}

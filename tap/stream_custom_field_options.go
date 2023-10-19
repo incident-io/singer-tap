@@ -43,10 +43,6 @@ func (s *StreamCustomFieldOptions) GetRecords(ctx context.Context, logger kitlog
 	}
 
 	for _, element := range response.JSON200.CustomFields {
-		if err != nil {
-			return nil, errors.Wrap(err, "listing custom field options")
-		}
-
 		options, err := s.GetOptions(ctx, logger, cl, element.Id)
 		if err != nil {
 			return nil, errors.Wrap(err, "listing custom field options")

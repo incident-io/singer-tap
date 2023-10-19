@@ -37,7 +37,7 @@ func (s *StreamFollowUps) GetRecords(ctx context.Context, logger kitlog.Logger, 
 
 	response, err := cl.FollowUpsV2ListWithResponse(ctx, &client.FollowUpsV2ListParams{})
 	if err != nil {
-		return nil, errors.Wrap(err, "listing incidents for actions stream")
+		return nil, errors.Wrap(err, "listing incident roles")
 	}
 
 	for _, element := range response.JSON200.FollowUps {

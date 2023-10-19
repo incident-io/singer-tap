@@ -8,9 +8,18 @@ import (
 	"github.com/incident-io/singer-tap/client"
 )
 
-func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *client.ClientWithResponses) error {
-	for name, stream := range streams {
-		logger := kitlog.With(logger, "stream", name)
+func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *client.ClientWithResponses, catalog *Catalog) error {
+	// If we weren't given a catalog, create a default one and use that
+	if catalog == nil {
+		catalog = NewDefaultCatalog(streams)
+	}
+
+	// We only want to sync enabled streams
+	enabledStreams := catalog.GetEnabledStreams()
+
+	for _, catalogEntry := range enabledStreams {
+		stream := streams[catalogEntry.Stream]
+		logger := kitlog.With(logger, "stream", catalogEntry.Stream)
 
 		logger.Log("msg", "outputting schema")
 		if err := ol.Log(stream.Output()); err != nil {
@@ -28,7 +37,7 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *clien
 		for _, record := range records {
 			op := &Output{
 				Type:          OutputTypeRecord,
-				Stream:        name,
+				Stream:        catalogEntry.Stream,
 				Record:        record,
 				TimeExtracted: timeExtracted,
 			}
@@ -42,7 +51,7 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *clien
 }
 
 func Discover(ctx context.Context, logger kitlog.Logger, ol *OutputLogger) error {
-	catalog := NewCatalog(streams)
+	catalog := NewDefaultCatalog(streams)
 
 	if err := ol.CataLog(catalog); err != nil {
 		return err

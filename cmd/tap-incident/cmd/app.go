@@ -82,11 +82,27 @@ func Run(ctx context.Context) (err error) {
 
 	if *discoveryMode {
 		err = tap.Discover(ctx, logger, ol)
+		if err != nil {
+			return err
+		}
 	} else {
-		err = tap.Sync(ctx, logger, ol, cl)
-	}
-	if err != nil {
-		return err
+		// If we're syncing - check if we were given a catalog
+		var (
+			catalog *tap.Catalog
+			err     error
+		)
+
+		if *catalogFile != "" {
+			catalog, err = loadCatalogOrError(ctx, *catalogFile)
+			if err != nil {
+				return err
+			}
+		}
+
+		err = tap.Sync(ctx, logger, ol, cl, catalog)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -111,6 +127,22 @@ func versionStanza() string {
 		"Version: %v\nGit SHA: %v\nGo Version: %v\nGo OS/Arch: %v/%v\nBuilt at: %v",
 		Version(), Commit, GoVersion, runtime.GOOS, runtime.GOARCH, Date,
 	)
+}
+
+func loadCatalogOrError(ctx context.Context, catalogFile string) (catalog *tap.Catalog, err error) {
+	defer func() {
+		if err == nil {
+			return
+		}
+		OUT("Failed to load catalog file!\n")
+	}()
+
+	catalog, err = tap.CatalogFileLoader(catalogFile).Load(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "loading catalog")
+	}
+
+	return catalog, nil
 }
 
 func loadConfigOrError(ctx context.Context, configFile string) (cfg *config.Config, err error) {

@@ -44,10 +44,10 @@ type MetadataFields struct {
 	// SelectedByDefault: If the user doesn't specify should we
 	// emit this field by default
 	// This really only applies to available inclusion setting
-	SelectedByDefault bool `json:"selected-by-default"`
+	SelectedByDefault bool `json:"selected-by-default,omitempty"`
 
 	// ForcedReplicateMethod: we will set to FULL_TABLE for our tap
-	ForcedReplicationMethod string `json:"forced-replication-method"`
+	ForcedReplicationMethod string `json:"forced-replication-method,omitempty"`
 }
 
 func (m Metadata) DefaultMetadata(schema model.Schema) []Metadata {
@@ -62,6 +62,20 @@ func (m Metadata) DefaultMetadata(schema model.Schema) []Metadata {
 				ForcedReplicationMethod: "FULL_TABLE", // HIGHWAY TO THE DATA ZONE
 			},
 		},
+	}
+
+	// For columns we want to set the inclusion to available for everything - but we set
+	// selected by default to true as well (so unless the user speficially says no, we'll include it)
+	// We might want to get more intelligent later - as this way people could stop themselves
+	// from getting key data by accident
+	for name := range schema.Properties {
+		metadata = append(metadata, Metadata{
+			Breadcrumb: []string{"properties", name},
+			Metadata: MetadataFields{
+				Inclusion:         "available",
+				SelectedByDefault: true,
+			},
+		})
 	}
 
 	return metadata

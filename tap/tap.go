@@ -28,9 +28,23 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *clien
 
 		timeExtracted := time.Now().Format(time.RFC3339)
 		logger.Log("msg", "loading records", "time_extracted", timeExtracted)
+
 		records, err := stream.GetRecords(ctx, logger, cl)
 		if err != nil {
 			return err
+		}
+
+		// Get the enabled fields for this stream
+		disabledFields, err := catalog.GetDisabledFields(catalogEntry.Stream)
+		if err != nil {
+			return err
+		}
+
+		// Filter out the disabled fields from each record (ew)
+		for _, record := range records {
+			for fieldName := range disabledFields {
+				delete(record, fieldName)
+			}
 		}
 
 		logger.Log("msg", "outputting records", "count", len(records))

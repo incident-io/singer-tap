@@ -49,12 +49,66 @@ func (s *StreamIncidents) GetRecords(ctx context.Context, logger kitlog.Logger, 
 		}
 
 		for _, element := range page.JSON200.Incidents {
-			results = append(results, model.IncidentV2.Serialize(element))
+			attachments, err := s.GetAttachments(ctx, logger, cl, element.Id)
+			if err != nil {
+				return nil, errors.Wrap(err, "listing incident attachments")
+			}
+
+			updates, err := s.GetIncidentUpdates(ctx, logger, cl, element.Id)
+			if err != nil {
+				return nil, errors.Wrap(err, "listing incident attachments")
+			}
+
+			results = append(results, model.IncidentV2.Serialize(element, attachments, updates))
 		}
 		if count := len(page.JSON200.Incidents); count == 0 {
 			return results, nil // end pagination
 		} else {
 			after = lo.ToPtr(page.JSON200.Incidents[count-1].Id)
+		}
+	}
+}
+
+func (s *StreamIncidents) GetAttachments(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses, incidentId string) ([]client.IncidentAttachmentV1, error) {
+	var (
+		results = []client.IncidentAttachmentV1{}
+	)
+
+	response, err := cl.IncidentAttachmentsV1ListWithResponse(ctx, &client.IncidentAttachmentsV1ListParams{
+		IncidentId: &incidentId,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "listing attachments for incidents stream")
+	}
+
+	results = append(results, response.JSON200.IncidentAttachments...)
+	return results, nil
+}
+
+func (s *StreamIncidents) GetIncidentUpdates(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses, incidentId string) ([]client.IncidentUpdateV2, error) {
+	var (
+		after    *string
+		pageSize = 250
+		results  = []client.IncidentUpdateV2{}
+	)
+
+	for {
+		logger.Log("msg", "loading incident updates page", "page_size", pageSize, "after", after)
+		page, err := cl.IncidentUpdatesV2ListWithResponse(ctx, &client.IncidentUpdatesV2ListParams{
+			IncidentId: &incidentId,
+			PageSize:   &pageSize,
+			After:      after,
+		})
+		if err != nil {
+			return nil, errors.Wrap(err, "listing incident updates")
+		}
+
+		results = append(results, page.JSON200.IncidentUpdates...)
+
+		if count := len(page.JSON200.IncidentUpdates); count == 0 {
+			return results, nil // end pagination
+		} else {
+			after = lo.ToPtr(page.JSON200.IncidentUpdates[count-1].Id)
 		}
 	}
 }

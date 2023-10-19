@@ -25,6 +25,8 @@ func (incidentV2) Schema() Property {
 			"creator":                   ActorV2.Schema(),
 			"custom_field_entries":      ArrayOf(CustomFieldEntryV1.Schema()),
 			"external_issue_reference":  Optional(ExternalIssueReferenceV2.Schema()),
+			"attachments":               Optional(ArrayOf(IncidentAttachmentV1.Schema())),
+			"updates":                   Optional(ArrayOf(IncidentUpdateV2.Schema())),
 			"incident_role_assignments": ArrayOf(IncidentRoleAssignmentV1.Schema()),
 			"incident_status":           IncidentStatusV1.Schema(),
 			"incident_timestamp_values": Optional(ArrayOf(IncidentTimestampWithValueV2.Schema())),
@@ -75,7 +77,25 @@ func (incidentV2) Schema() Property {
 	}
 }
 
-func (incidentV2) Serialize(input client.IncidentV2) map[string]any {
+func (incidentV2) Serialize(
+	input client.IncidentV2,
+	incidentAttachments []client.IncidentAttachmentV1,
+	incidentUpdates []client.IncidentUpdateV2,
+) map[string]any {
+	var attachments []map[string]any
+	if len(incidentAttachments) > 0 {
+		attachments = lo.Map(incidentAttachments, func(attachment client.IncidentAttachmentV1, _ int) map[string]any {
+			return IncidentAttachmentV1.Serialize(attachment)
+		})
+	}
+
+	var updates []map[string]any
+	if len(incidentUpdates) > 0 {
+		updates = lo.Map(incidentUpdates, func(update client.IncidentUpdateV2, _ int) map[string]any {
+			return IncidentUpdateV2.Serialize(update)
+		})
+	}
+
 	return map[string]any{
 		"id":       input.Id,
 		"name":     input.Name,
@@ -85,6 +105,8 @@ func (incidentV2) Serialize(input client.IncidentV2) map[string]any {
 			return CustomFieldEntryV1.Serialize(entry)
 		}),
 		"external_issue_reference": ExternalIssueReferenceV2.Serialize(input.ExternalIssueReference),
+		"attachments":              attachments,
+		"updates":                  updates,
 		"incident_role_assignments": lo.Map(input.IncidentRoleAssignments, func(assignment client.IncidentRoleAssignmentV1, _ int) map[string]any {
 			return IncidentRoleAssignmentV1.Serialize(assignment)
 		}),

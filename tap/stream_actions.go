@@ -37,7 +37,7 @@ func (s *StreamActions) GetRecords(ctx context.Context, logger kitlog.Logger, cl
 
 	response, err := cl.ActionsV2ListWithResponse(ctx, &client.ActionsV2ListParams{})
 	if err != nil {
-		return nil, errors.Wrap(err, "listing incidents for actions stream")
+		return nil, errors.Wrap(err, "listing actions")
 	}
 
 	for _, element := range response.JSON200.Actions {

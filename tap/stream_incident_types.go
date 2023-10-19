@@ -37,7 +37,7 @@ func (s *StreamIncidentTypes) GetRecords(ctx context.Context, logger kitlog.Logg
 
 	response, err := cl.IncidentTypesV1ListWithResponse(ctx)
 	if err != nil {
-		return nil, errors.Wrap(err, "listing incidents for actions stream")
+		return nil, errors.Wrap(err, "listing incident types")
 	}
 
 	for _, element := range response.JSON200.IncidentTypes {

@@ -18,7 +18,12 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *clien
 	enabledStreams := catalog.GetEnabledStreams()
 
 	for _, catalogEntry := range enabledStreams {
-		stream := streams[catalogEntry.Stream]
+		// Use a filter to ensure we only output the fields we want
+		stream := Filter{
+			Stream:       streams[catalogEntry.Stream],
+			CatalogEntry: catalogEntry,
+		}
+
 		logger := kitlog.With(logger, "stream", catalogEntry.Stream)
 
 		logger.Log("msg", "outputting schema")
@@ -28,6 +33,7 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *clien
 
 		timeExtracted := time.Now().Format(time.RFC3339)
 		logger.Log("msg", "loading records", "time_extracted", timeExtracted)
+
 		records, err := stream.GetRecords(ctx, logger, cl)
 		if err != nil {
 			return err

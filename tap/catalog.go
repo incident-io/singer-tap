@@ -58,6 +58,35 @@ func (c *Catalog) GetEnabledStreams() []CatalogEntry {
 	return enabledStreams
 }
 
+func (c *CatalogEntry) GetDisabledFields() map[string]bool {
+	// Just something to enable quick lookups of fields by name
+	var disabledFields = map[string]bool{}
+
+	// For the given stream, get the enabled fields
+	// For this catalog entry, get the metadata, and build a list of all the enabled fields
+	for _, metadata := range *c.Metadata {
+		// Ignore the top level metadata
+		if len(metadata.Breadcrumb) == 0 {
+			continue
+		}
+
+		// Check if the metadata has the user input "selected" bool
+		if metadata.Metadata.Selected != nil {
+			// If so, check its set to false!
+			if !*metadata.Metadata.Selected {
+				disabledFields[metadata.Breadcrumb[len(metadata.Breadcrumb)-1]] = true
+			}
+		} else {
+			// There's no selected key, so check if WE have set the selected by default
+			if !metadata.Metadata.SelectedByDefault {
+				disabledFields[metadata.Breadcrumb[len(metadata.Breadcrumb)-1]] = true
+			}
+		}
+	}
+
+	return disabledFields
+}
+
 func NewDefaultCatalog(streams map[string]Stream) *Catalog {
 	entries := []CatalogEntry{}
 

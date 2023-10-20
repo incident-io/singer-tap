@@ -1,0 +1,38 @@
+---
+version: 2.1
+
+jobs:
+  sync:
+    docker:
+      - image: cimg/base:2023.04
+    working_directory: ~/app
+    steps:
+      - checkout
+      - run:
+          name: Install tap-incident
+          command: |
+            VERSION="0.4.0"
+
+            echo "Installing importer v${VERSION}..."
+            curl -L \
+              -o "/tmp/tap-incident_${VERSION}_linux_amd64.tar.gz" \
+              "https://github.com/incident-io/singer-tap/releases/download/v${VERSION}/tap-incident_${VERSION}_linux_amd64.tar.gz"
+            tar zxf "/tmp/tap-incident_${VERSION}_linux_amd64.tar.gz" -C /tmp
+      - run:
+          name: Create config
+          command: |
+            echo '
+            {
+              "api_key": "",
+            }' > /tmp/config.json
+            '
+      - run:
+          name: Sync
+          command: |
+            /tmp/tap-incident --config tmp/config.json
+
+workflows:
+  version: 2
+  sync:
+    jobs:
+      - sync

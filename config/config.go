@@ -1,8 +1,6 @@
 package config
 
 import (
-	"context"
-
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
@@ -16,9 +14,4 @@ func (c Config) Validate() error {
 		validation.Field(&c.APIKey, validation.Required.
 			Error("must provide an api_key to authenticate against the incident.io API.")),
 	)
-}
-
-// Load returns currently loaded config
-func (c Config) Load(context.Context) (Config, error) {
-	return Config(c), nil
 }

@@ -1,12 +1,7 @@
 package tap
 
 import (
-	"context"
-	"encoding/json"
-	"os"
-
 	"github.com/incident-io/singer-tap/model"
-	"github.com/pkg/errors"
 )
 
 // A catalog can contain several streams or "entries"
@@ -83,35 +78,4 @@ func NewDefaultCatalog(streams map[string]Stream) *Catalog {
 	return &Catalog{
 		Streams: entries,
 	}
-}
-
-type CatalogLoader interface {
-	Load(context.Context) (*Catalog, error)
-}
-
-type CatalogLoaderFunc func(context.Context) (*Catalog, error)
-
-func (l CatalogLoaderFunc) Load(ctx context.Context) (*Catalog, error) {
-	return l(ctx)
-}
-
-// CatalogFileLoader loads Catalog from a filepath
-type CatalogFileLoader string
-
-func (l CatalogFileLoader) Load(context.Context) (*Catalog, error) {
-	data, err := os.ReadFile(string(l))
-	if err != nil {
-		return nil, err
-	}
-
-	return ParseCatalogFile(string(l), data)
-}
-
-func ParseCatalogFile(filename string, data []byte) (*Catalog, error) {
-	var catalog Catalog
-	if err := json.Unmarshal(data, &catalog); err != nil {
-		return nil, errors.Wrap(err, "parsing json")
-	}
-
-	return &catalog, nil
 }

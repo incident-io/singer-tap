@@ -2,8 +2,6 @@ package tap
 
 import (
 	"github.com/incident-io/singer-tap/model"
-	"github.com/pkg/errors"
-	"github.com/samber/lo"
 )
 
 // A catalog can contain several streams or "entries"
@@ -60,18 +58,13 @@ func (c *Catalog) GetEnabledStreams() []CatalogEntry {
 	return enabledStreams
 }
 
-func (c *Catalog) GetDisabledFields(streamName string) (map[string]bool, error) {
+func (c *CatalogEntry) GetDisabledFields() map[string]bool {
 	// Just something to enable quick lookups of fields by name
-	var disabledField = map[string]bool{}
+	var disabledFields = map[string]bool{}
 
 	// For the given stream, get the enabled fields
-	catalogEntry, found := lo.Find(c.Streams, func(stream CatalogEntry) bool { return stream.Stream == streamName })
-	if !found {
-		return nil, errors.Errorf("stream %s not found", streamName)
-	}
-
 	// For this catalog entry, get the metadata, and build a list of all the enabled fields
-	for _, metadata := range *catalogEntry.Metadata {
+	for _, metadata := range *c.Metadata {
 		// Ignore the top level metadata
 		if len(metadata.Breadcrumb) == 0 {
 			continue
@@ -81,17 +74,17 @@ func (c *Catalog) GetDisabledFields(streamName string) (map[string]bool, error) 
 		if metadata.Metadata.Selected != nil {
 			// If so, check its set to false!
 			if !*metadata.Metadata.Selected {
-				disabledField[metadata.Breadcrumb[len(metadata.Breadcrumb)-1]] = true
+				disabledFields[metadata.Breadcrumb[len(metadata.Breadcrumb)-1]] = true
 			}
 		} else {
 			// There's no selected key, so check if WE have set the selected by default
 			if !metadata.Metadata.SelectedByDefault {
-				disabledField[metadata.Breadcrumb[len(metadata.Breadcrumb)-1]] = true
+				disabledFields[metadata.Breadcrumb[len(metadata.Breadcrumb)-1]] = true
 			}
 		}
 	}
 
-	return disabledField, nil
+	return disabledFields
 }
 
 func NewDefaultCatalog(streams map[string]Stream) *Catalog {

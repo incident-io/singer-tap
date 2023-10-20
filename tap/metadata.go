@@ -1,6 +1,8 @@
 package tap
 
-import "github.com/incident-io/singer-tap/model"
+import (
+	"github.com/incident-io/singer-tap/model"
+)
 
 type Metadata struct {
 	// Pointer to where in the schmea this metadata applies

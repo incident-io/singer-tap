@@ -18,7 +18,12 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *clien
 	enabledStreams := catalog.GetEnabledStreams()
 
 	for _, catalogEntry := range enabledStreams {
-		stream := streams[catalogEntry.Stream]
+		// Use a filter to ensure we only output the fields we want
+		stream := Filter{
+			Stream:       streams[catalogEntry.Stream],
+			CatalogEntry: catalogEntry,
+		}
+
 		logger := kitlog.With(logger, "stream", catalogEntry.Stream)
 
 		logger.Log("msg", "outputting schema")
@@ -32,19 +37,6 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *clien
 		records, err := stream.GetRecords(ctx, logger, cl)
 		if err != nil {
 			return err
-		}
-
-		// Get the enabled fields for this stream
-		disabledFields, err := catalog.GetDisabledFields(catalogEntry.Stream)
-		if err != nil {
-			return err
-		}
-
-		// Filter out the disabled fields from each record (ew)
-		for _, record := range records {
-			for fieldName := range disabledFields {
-				delete(record, fieldName)
-			}
 		}
 
 		logger.Log("msg", "outputting records", "count", len(records))

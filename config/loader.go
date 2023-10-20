@@ -1,28 +1,24 @@
 package config
 
 import (
-	"context"
+	"encoding/json"
 	"os"
+
+	"github.com/pkg/errors"
 )
 
-type Loader interface {
-	Load(context.Context) (*Config, error)
-}
-
-type LoaderFunc func(context.Context) (*Config, error)
-
-func (l LoaderFunc) Load(ctx context.Context) (*Config, error) {
-	return l(ctx)
-}
-
-// FileLoader loads config from a filepath
-type FileLoader string
-
-func (l FileLoader) Load(context.Context) (*Config, error) {
-	data, err := os.ReadFile(string(l))
+func LoadAndParse[T any](path string, obj T) (*T, error) {
+	b, err := os.ReadFile(path)
 	if err != nil {
-		return nil, err
+		return &obj, errors.Wrapf(err, "unable to read file at path %v", path)
 	}
 
-	return Parse(string(l), data)
+	return ParseContents(b, obj)
+}
+
+func ParseContents[T any](content []byte, obj T) (*T, error) {
+	if err := json.Unmarshal(content, &obj); err != nil {
+		return &obj, err
+	}
+	return &obj, nil
 }

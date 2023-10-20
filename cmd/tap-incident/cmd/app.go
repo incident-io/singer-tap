@@ -137,7 +137,7 @@ func loadCatalogOrError(ctx context.Context, catalogFile string) (catalog *tap.C
 		OUT("Failed to load catalog file!\n")
 	}()
 
-	catalog, err = tap.CatalogFileLoader(catalogFile).Load(ctx)
+	catalog, err = config.LoadAndParse(catalogFile, tap.Catalog{})
 	if err != nil {
 		return nil, errors.Wrap(err, "loading catalog")
 	}
@@ -167,7 +167,7 @@ func loadConfigOrError(ctx context.Context, configFile string) (cfg *config.Conf
 		return nil, errors.New("No config file set! (--config)")
 	}
 
-	cfg, err = config.FileLoader(configFile).Load(ctx)
+	cfg, err = config.LoadAndParse(configFile, config.Config{})
 	if err != nil {
 		return nil, errors.Wrap(err, "loading config")
 	}

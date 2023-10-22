@@ -28,7 +28,7 @@ func (incidentRoleV1) Schema() Property {
 			"role_type": {
 				Types: []string{"string"},
 			},
-			"short_form": {
+			"shortform": {
 				Types: []string{"string"},
 			},
 			"created_at": DateTime.Schema(),

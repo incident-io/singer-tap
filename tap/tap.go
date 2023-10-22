@@ -31,7 +31,7 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *clien
 			return err
 		}
 
-		timeExtracted := time.Now().Format(time.RFC3339)
+		timeExtracted := time.Now().UTC().Format(time.RFC3339)
 		logger.Log("msg", "loading records", "time_extracted", timeExtracted)
 
 		records, err := stream.GetRecords(ctx, logger, cl)

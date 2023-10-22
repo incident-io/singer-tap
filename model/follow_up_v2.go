@@ -28,7 +28,7 @@ func (followUpV2) Schema() Property {
 				Types: []string{"string", "null"},
 			},
 			"external_issue_reference": Optional(ExternalIssueReferenceV2.Schema()),
-			"completed_at":             DateTime.Schema(),
+			"completed_at":             Optional(DateTime.Schema()),
 			"created_at":               DateTime.Schema(),
 			"updated_at":               DateTime.Schema(),
 		},

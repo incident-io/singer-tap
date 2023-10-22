@@ -23,7 +23,7 @@ func (actionV2) Schema() Property {
 				Types: []string{"string"},
 			},
 			"assignee":     Optional(UserV1.Schema()),
-			"completed_at": DateTime.Schema(),
+			"completed_at": Optional(DateTime.Schema()),
 			"created_at":   DateTime.Schema(),
 			"updated_at":   DateTime.Schema(),
 		},

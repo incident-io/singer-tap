@@ -22,7 +22,7 @@ jobs:
         name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.20'
+          go-version: '1.21'
       -
         name: Build
         run: go run cmd/tap-incident/main.go --help
@@ -31,7 +31,9 @@ jobs:
         run: go install github.com/onsi/ginkgo/v2/ginkgo
       -
         name: Run tests
-        run: ginkgo -r .
+        run: ginkgo -tags=integration -r .
+        env:
+          TEST_INCIDENT_API_KEY: ${{secrets.TEST_INCIDENT_API_KEY}}
       -
         id: tag
         name: Tag if new version

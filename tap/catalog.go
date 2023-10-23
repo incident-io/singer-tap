@@ -1,6 +1,9 @@
 package tap
 
 import (
+	"cmp"
+	"slices"
+
 	"github.com/incident-io/singer-tap/model"
 )
 
@@ -94,6 +97,17 @@ func NewDefaultCatalog(streams map[string]Stream) *Catalog {
 		streamSchema := *stream.Output().Schema
 		metadata := Metadata{}.DefaultMetadata(streamSchema)
 
+		// Sort our metadata to make it deterministic
+		slices.SortFunc(metadata, func(i, j Metadata) int {
+			if len(i.Breadcrumb) == 0 {
+				return -1
+			} else if len(j.Breadcrumb) == 0 {
+				return 1
+			}
+
+			return cmp.Compare(i.Breadcrumb[1], j.Breadcrumb[1])
+		})
+
 		catalogEntry := CatalogEntry{
 			Stream:      name,
 			TapStreamID: name,
@@ -103,6 +117,11 @@ func NewDefaultCatalog(streams map[string]Stream) *Catalog {
 
 		entries = append(entries, catalogEntry)
 	}
+
+	// Sort the entries so we can compare outputs easily in tests
+	slices.SortFunc(entries, func(i, j CatalogEntry) int {
+		return cmp.Compare(i.Stream, j.Stream)
+	})
 
 	return &Catalog{
 		Streams: entries,

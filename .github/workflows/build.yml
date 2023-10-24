@@ -35,6 +35,38 @@ jobs:
         env:
           TEST_INCIDENT_API_KEY: ${{secrets.TEST_INCIDENT_API_KEY}}
       -
+        name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      -
+        name: Install csv-target dependency
+        run: python -m pip install 'target-csv @ git+https://github.com/rliddler/target-csv@master'
+      -
+        name: Remove the existing genned files
+        run: rm integration/testdata/sync/*
+      -
+        name: Run tap -> target
+        env:
+          TEST_INCIDENT_API_KEY: ${{secrets.TEST_INCIDENT_API_KEY}}
+        run: |
+          echo '{"destination_path": "integration/testdata/sync", "timestamp_override": "2023"}' > target-config.json
+          echo "{\"api_key\": \"$TEST_INCIDENT_API_KEY\"}" > tap-config.json
+
+          go run cmd/tap-incident/main.go --config tap-config.json --catalog integration/catalog.json | target-csv --config target-config.json
+      -
+        name: Check tap output has not changed
+        run: |
+          if [ ! -z "$(git status integration/testdata/sync --porcelain)" ]; then
+            git status
+            echo
+            echo -e '\033[1;93m!!! "tap-incident | target-csv" resulted in changes. Please run those commands locally and commit the changes.\e[0m'
+            echo
+            git diff
+            echo
+            exit 1
+          fi
+      -
         id: tag
         name: Tag if new version
         run: |

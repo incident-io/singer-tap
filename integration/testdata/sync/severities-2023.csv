@@ -1,4 +1,0 @@
-created_at,description,id,name,rank,updated_at
-2023-10-24T09:27:22.668Z,"Issues with low impact, which can usually be handled within working hours. Most customers are unlikely to notice any problems. Examples include a slight drop in application performance.",01HDGG56RY7KJ0AH2KXWK9BFP4,Minor,0,2023-10-24T09:27:22.668Z
-2023-10-24T09:27:22.679Z,Issues causing significant impact. Immediate response is usually required. We might have some workarounds that mitigate the impact on customers. Examples include an important sub-system failing.,01HDGG56RYJFS2YQXSWHQB29AG,Major,1,2023-10-24T09:27:22.679Z
-2023-10-24T09:27:22.687Z,"Issues causing very high impact to customers. Immediate response is required. Examples include a full outage, or a data breach.",01HDGG56RYK59Z4NRGJFK229WA,Critical,2,2023-10-24T09:27:22.687Z

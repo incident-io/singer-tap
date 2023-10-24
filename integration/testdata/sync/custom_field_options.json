@@ -1,0 +1,74 @@
+[
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RY0VJSFVG2WSFBGSG3",
+    "sort_key": 10,
+    "value": "Security"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RY39G9H3HV4WQDCQTX",
+    "sort_key": 2,
+    "value": "Non-production outage"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RY3D4CJT7SHTSKD9ZK",
+    "sort_key": 8,
+    "value": "Cascading failure"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RY43E6D72FV4ZAY32Z",
+    "sort_key": 11,
+    "value": "Other"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RY49Z769V8S70HK03R",
+    "sort_key": 1,
+    "value": "Partial production outage"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RYBEJZK9AE6X6H7CJ0",
+    "sort_key": 5,
+    "value": "Connection issues"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RYD3S1CB3C84NR29TP",
+    "sort_key": 0,
+    "value": "Full production outage"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RYMH5SVD17JM19S83J",
+    "sort_key": 9,
+    "value": "Near miss"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RYNHZZVVXHH4HJPWDW",
+    "sort_key": 7,
+    "value": "Increased latency"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RYQWQ6ECSQG0H39NYJ",
+    "sort_key": 6,
+    "value": "Increased errors"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RYTDGGJRBX2WATC33P",
+    "sort_key": 3,
+    "value": "Data loss"
+  },
+  {
+    "custom_field_id": "01HDGG56RYH9PQ3DMEMM25DXF1",
+    "id": "01HDGG56RYWJ82M21CXCBN2DDD",
+    "sort_key": 4,
+    "value": "Degraded service/performance"
+  }
+]

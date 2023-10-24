@@ -1,0 +1,92 @@
+[
+  {
+    "category": "live",
+    "created_at": "2023-10-24T09:27:22.727Z",
+    "description": "Something has gone wrong, and we know why. We're in the process of fixing it.",
+    "id": "01HDGG56RY089GN4S01KWXBE07",
+    "name": "Fixing",
+    "rank": 2,
+    "updated_at": "2023-10-24T09:27:22.727Z"
+  },
+  {
+    "category": "learning",
+    "created_at": "2023-10-24T09:27:22.742Z",
+    "description": "We're reviewing what we've learned from this incident.",
+    "id": "01HDGG56RYBBV7MT6KFHQ82HCD",
+    "name": "Reviewing",
+    "rank": 5,
+    "updated_at": "2023-10-24T09:27:22.742Z"
+  },
+  {
+    "category": "canceled",
+    "created_at": "2023-10-24T09:27:22.713Z",
+    "description": " ",
+    "id": "01HDGG56RYC30NDNG8FP7R1E71",
+    "name": "Canceled",
+    "rank": -3,
+    "updated_at": "2023-10-24T09:27:22.713Z"
+  },
+  {
+    "category": "live",
+    "created_at": "2023-10-24T09:27:22.72Z",
+    "description": "We've spotted that something is wrong, but we're not quite sure why yet.",
+    "id": "01HDGG56RYC3TTGQWKA8ZRTFZX",
+    "name": "Investigating",
+    "rank": 1,
+    "updated_at": "2023-10-24T09:27:22.72Z"
+  },
+  {
+    "category": "learning",
+    "created_at": "2023-10-24T09:27:22.737Z",
+    "description": "We're documenting what happened.",
+    "id": "01HDGG56RYD5RS3B6EAQBRJQDX",
+    "name": "Documenting",
+    "rank": 4,
+    "updated_at": "2023-10-24T09:27:22.737Z"
+  },
+  {
+    "category": "triage",
+    "created_at": "2023-10-24T09:27:22.693Z",
+    "description": " ",
+    "id": "01HDGG56RYFK1BSZ4VSKF177VD",
+    "name": "Triage",
+    "rank": 0,
+    "updated_at": "2023-10-24T09:27:22.693Z"
+  },
+  {
+    "category": "merged",
+    "created_at": "2023-10-24T09:27:22.705Z",
+    "description": " ",
+    "id": "01HDGG56RYG1QB36T5Q1262ZMW",
+    "name": "Merged",
+    "rank": -2,
+    "updated_at": "2023-10-24T09:27:22.705Z"
+  },
+  {
+    "category": "declined",
+    "created_at": "2023-10-24T09:27:22.699Z",
+    "description": " ",
+    "id": "01HDGG56RYQ3QR7T1XRGSTVDKQ",
+    "name": "Declined",
+    "rank": -1,
+    "updated_at": "2023-10-24T09:27:22.699Z"
+  },
+  {
+    "category": "closed",
+    "created_at": "2023-10-24T09:27:22.747Z",
+    "description": "We're confident the issue is resolved.",
+    "id": "01HDGG56RYR2HATMM7R2TS6YJQ",
+    "name": "Closed",
+    "rank": 6,
+    "updated_at": "2023-10-24T09:27:22.747Z"
+  },
+  {
+    "category": "live",
+    "created_at": "2023-10-24T09:27:22.732Z",
+    "description": "We've tried to fix the issue, and we're waiting to see if our fix has worked.",
+    "id": "01HDGG56RYY3F04W0QJ4YEGFH8",
+    "name": "Monitoring",
+    "rank": 3,
+    "updated_at": "2023-10-24T09:27:22.732Z"
+  }
+]

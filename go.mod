@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.3.2
+	github.com/davecgh/go-spew v1.1.1
 	github.com/deepmap/oapi-codegen v1.12.4
 	github.com/fatih/structs v1.1.0
 	github.com/go-kit/log v0.2.0

@@ -29,3 +29,33 @@ The translation / interface layer between incident.io types and singer types are
 
 - `Schema()` - singer schema representing the full type, may have `Optional()` and `ArrayOf` types
 - `Serialize()` - takes the incident.io client type and returns data in the format specified by the `Schema()` method
+
+## Regenerating the CI test files
+
+For this you will need to work for incident.io and have access to the required API key.
+
+First you need to get the python target-csv working locally. Annoyingly the official version only works on super old pythons so you can install the forked version. Recommend setting up a virtual env for this first:
+
+```
+pyenv virtualenv 3.10.13 csv-target
+pyenv activate csv-target
+python -m pip install 'target-csv @ git+https://github.com/rliddler/target-csv@master'
+```
+
+You will also need to create a config for both the tap and the target. For the target you will pretty much need the following:
+
+```
+{
+  "destination_path": "integration/testdata/sync",
+  "timestamp_override": "2023",
+  "override_file": true
+}
+```
+
+You then need to delete the existing integration/testdata/sync/\* files (annoying I know but the target only appends to each file) and regenerate them using the following command:
+
+```
+tap-incident --config tmp/config.json --catalog integration/catalog.json | target-csv --config tmp/target-config.json
+```
+
+Check any new changes in the git diff - and if you approve commit them. The github workflow will basically do the same as this and check there are no differences in the generated rows.

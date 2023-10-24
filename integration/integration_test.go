@@ -47,4 +47,14 @@ var _ = Describe("Integration", Ordered, func() {
 			ExpectJSONToMatchSnapshot(session.Wait().Out.Contents(), "testdata/discover.json")
 		})
 	})
+
+	Describe("Sync", func() {
+		It("runs without erroring using the default catalog", func() {
+			cmd := exec.Command(tapPath, "--config", configFile.Name())
+			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
+			Expect(err).ToNot(HaveOccurred())
+
+			Eventually(session, "10s").Should(gexec.Exit(0))
+		})
+	})
 })

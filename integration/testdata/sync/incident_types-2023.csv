@@ -1,0 +1,2 @@
+create_in_triage,created_at,description,id,is_default,name,private_incidents_only,updated_at
+optional,2023-10-24T09:27:23.104Z,,01HDGG56RYQBPJ6WQ3RZRKNKKY,True,Default,False,2023-10-24T09:27:23.104Z

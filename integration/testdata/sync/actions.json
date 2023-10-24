@@ -1,0 +1,12 @@
+[
+  {
+    "assignee": null,
+    "completed_at": null,
+    "created_at": "2023-10-24T15:10:57.97Z",
+    "description": "This is an action.",
+    "id": "01HDH3TAWY8EKB6BK08Y4BQA0E",
+    "incident_id": "01HDH3SMWK0C2D8TN41PVW61TA",
+    "status": "outstanding",
+    "updated_at": "2023-10-24T15:10:57.97Z"
+  }
+]

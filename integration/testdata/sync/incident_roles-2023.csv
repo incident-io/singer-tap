@@ -1,5 +1,0 @@
-created_at,description,id,instructions,name,role_type,shortform,updated_at
-2023-10-24T09:27:23.093Z,The person who reported the incident,01HDGG56RYWFBYZCVAZXGA3JA8,,Reporter,reporter,,2023-10-24T09:27:23.093Z
-2023-10-24T09:27:23.076Z,"The person currently coordinating the incident, tasked with driving it to resolution and ensuring clear internal and external communication with stakeholders and customers.",01HDGG56RYRA4M4JD0TSDG9DMA,"- Make sure it’s clear who is doing what, and that people are working together effectively
-- Ensure everybody has what they need, and any blockers are flagged quickly
-- Provide regular, clear updates for stakeholders to let them know what’s happening",Incident Lead,lead,lead,2023-10-24T09:27:23.076Z

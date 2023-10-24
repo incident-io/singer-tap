@@ -1,0 +1,20 @@
+[
+  {
+    "assignee": null,
+    "completed_at": null,
+    "created_at": "2023-10-24T15:11:26.719Z",
+    "description": "Something followups based goes here.",
+    "external_issue_reference": null,
+    "id": "01HDH3V6Z5XWT7CTHP13BKNHFE",
+    "incident_id": "01HDH3SMWK0C2D8TN41PVW61TA",
+    "priority": {
+      "description": "A follow-up that is of lower priority compared to other tasks.",
+      "id": "01HDGG56RYNRCX47016KWQJMNY",
+      "name": "Low",
+      "rank": 3
+    },
+    "status": "outstanding",
+    "title": "This is a follow up",
+    "updated_at": "2023-10-24T15:11:26.719Z"
+  }
+]

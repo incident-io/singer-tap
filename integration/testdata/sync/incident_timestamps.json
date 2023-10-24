@@ -1,0 +1,62 @@
+[
+  {
+    "id": "01HDGG56RY0W9Q4EK0E4D1DZ65",
+    "name": "Accepted at",
+    "rank": 1
+  },
+  {
+    "id": "01HDGG56RY2GHHKY4Q37CKJ0EF",
+    "name": "Impact started at",
+    "rank": 6
+  },
+  {
+    "id": "01HDGG56RY3EHYJT389RQ9B0GP",
+    "name": "Declined at",
+    "rank": 2
+  },
+  {
+    "id": "01HDGG56RY9921S9B3YDEZYXZN",
+    "name": "Reviewed at",
+    "rank": 10
+  },
+  {
+    "id": "01HDGG56RYBSKWDA31576EM477",
+    "name": "Documented at",
+    "rank": 9
+  },
+  {
+    "id": "01HDGG56RYC6004JFGJHB9S7RA",
+    "name": "Canceled at",
+    "rank": 4
+  },
+  {
+    "id": "01HDGG56RYCNM26775JPXYWRJ9",
+    "name": "Fixed at",
+    "rank": 8
+  },
+  {
+    "id": "01HDGG56RYGWBQ1YY7NG3YQ1WB",
+    "name": "Closed at",
+    "rank": 11
+  },
+  {
+    "id": "01HDGG56RYMSA9EN647D3VDQ59",
+    "name": "Merged at",
+    "rank": 3
+  },
+  {
+    "id": "01HDGG56RYQDP07MM9GWE51VQ1",
+    "name": "Identified at",
+    "rank": 7
+  },
+  {
+    "id": "01HDGG56RYW80XWP9YJ27XBDQP",
+    "name": "Resolved at",
+    "rank": 5
+  },
+  {
+    "id": "01HDGG56RYYFSWC0637VQF6GKV",
+    "name": "Reported at",
+    "rank": 0
+  }
+]

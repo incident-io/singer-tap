@@ -75,6 +75,11 @@ func DumpToMap(input interface{}) map[string]any {
 }
 
 func Optional(p Property) Property {
+	for _, val := range p.Types {
+		if val == "null" {
+			return p
+		}
+	}
 	p.Types = append(p.Types, "null")
 	return p
 }

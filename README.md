@@ -28,6 +28,25 @@ Once installed, see [documentation](docs) for example configurations.
 A Docker image is available for containerised environments; see [Docker
 Hub][hub] for more details of the image and available tags.
 
+## Integration snapshots
+
+The `integration` package contains snapshots of data from the integration test
+incident.io account. These snapshots are not intended to be managed by hand, and
+should be updated automatically instead.
+
+Whenever you need to update the snapshots, run:
+
+```console
+$ export TEST_INCIDENT_API_KEY="<test-key>"
+$ export TAP_SNAPSHOT_UPDATE='true' ginkgo -tags=integration -r ./integration
+Writing snapshot file testdata/sync/follow_ups.json
+...
+```
+[test-key]: https://start.1password.com/open/i?a=5P4EMQNU2RGBHC6TS4KB3PUFO4&v=vdgfxfm7m46sq2gzodftwi2yle&i=gayjefie3pcngvbv5tz2vsbndi&h=incident-io.1password.com
+
+For incident.io employees, you can find the test key in 1Password
+[here][test-key].
+
 ## Contributing
 
 We're happy to accept open-source contributions or feedback. Just open a

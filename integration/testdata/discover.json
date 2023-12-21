@@ -560,7 +560,6 @@
             },
             "type": [
               "object",
-              "null",
               "null"
             ]
           },
@@ -1964,7 +1963,6 @@
             },
             "type": [
               "object",
-              "null",
               "null"
             ]
           },
@@ -2141,7 +2139,8 @@
                     "value": {
                       "format": "date-time",
                       "type": [
-                        "string"
+                        "string",
+                        "null"
                       ]
                     }
                   },

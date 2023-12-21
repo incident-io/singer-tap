@@ -586,7 +586,6 @@
           "external_issue_reference": {
             "type": [
               "object",
-              "null",
               "null"
             ],
             "properties": {
@@ -760,7 +759,8 @@
               "properties": {
                 "incident_timestamp": {
                   "type": [
-                    "object"
+                    "object",
+                    "null"
                   ],
                   "properties": {
                     "id": {

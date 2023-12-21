@@ -8,7 +8,7 @@ var ExternalIssueReferenceV2 externalIssueReferenceV2
 
 func (externalIssueReferenceV2) Schema() Property {
 	return Property{
-		Types: []string{"object", "null"},
+		Types: []string{"object"},
 		Properties: map[string]Property{
 			"issue_name": {
 				Types: []string{"string"},

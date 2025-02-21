@@ -116,7 +116,7 @@
           "required": false,
           "role_type": "lead",
           "shortform": "lead",
-          "updated_at": "2023-10-24T09:27:23.076Z"
+          "updated_at": "2024-06-03T14:03:47.599Z"
         }
       },
       {
@@ -135,7 +135,7 @@
           "required": false,
           "role_type": "reporter",
           "shortform": "",
-          "updated_at": "2023-10-24T09:27:23.093Z"
+          "updated_at": "2024-06-03T14:03:47.6Z"
         }
       }
     ],
@@ -243,7 +243,7 @@
         "incident_timestamp": {
           "id": "01HDGG56RYGWBQ1YY7NG3YQ1WB",
           "name": "Closed at",
-          "rank": 11
+          "rank": 12
         },
         "value": null
       }

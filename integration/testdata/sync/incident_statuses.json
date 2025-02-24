@@ -78,7 +78,7 @@
     "id": "01HDGG56RYR2HATMM7R2TS6YJQ",
     "name": "Closed",
     "rank": 6,
-    "updated_at": "2023-10-24T09:27:22.747Z"
+    "updated_at": "2024-01-17T15:22:39.128Z"
   },
   {
     "category": "live",
@@ -88,5 +88,14 @@
     "name": "Monitoring",
     "rank": 3,
     "updated_at": "2023-12-12T13:13:37.509Z"
+  },
+  {
+    "category": "paused",
+    "created_at": "2024-02-05T14:00:55.633Z",
+    "description": " ",
+    "id": "01HNWS4V2HEJB9Z81XWPP3XPAS",
+    "name": "Paused",
+    "rank": 7,
+    "updated_at": "2024-02-05T14:00:55.633Z"
   }
 ]

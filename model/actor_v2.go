@@ -19,7 +19,7 @@ func (actorV2) Schema() Property {
 func (actorV2) Serialize(input client.ActorV2) map[string]any {
 	var user map[string]any
 	if input.User != nil {
-		user = UserV1.Serialize(*input.User)
+		user = UserV2.Serialize(*input.User)
 	}
 
 	var apiKey map[string]any

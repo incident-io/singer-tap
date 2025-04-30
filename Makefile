@@ -51,4 +51,4 @@ client/client.gen.go:
 		client/openapi3.json
 
 client/openapi3.json:
-	curl https://api.incident.io/v1/openapi.json | jq . > $@
+	curl https://api.incident.io/v1/openapiV3.json | jq . > $@

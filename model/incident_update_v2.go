@@ -19,7 +19,7 @@ func (incidentUpdateV2) Schema() Property {
 			"message": {
 				Types: []string{"string", "null"},
 			},
-			"new_incident_status": IncidentStatusV1.Schema(),
+			"new_incident_status": IncidentStatusV2.Schema(),
 			"new_severity":        Optional(SeverityV2.Schema()),
 			"updater":             ActorV2.Schema(),
 			"created_at":          DateTime.Schema(),
@@ -37,7 +37,7 @@ func (incidentUpdateV2) Serialize(input client.IncidentUpdateV2) map[string]any 
 		"id":                  input.Id,
 		"incident_id":         input.IncidentId,
 		"message":             input.Message,
-		"new_incident_status": IncidentStatusV1.Serialize(input.NewIncidentStatus),
+		"new_incident_status": IncidentStatusV2.Serialize(input.NewIncidentStatus),
 		"new_severity":        severity,
 		"updater":             ActorV2.Serialize(input.Updater),
 		"created_at":          input.CreatedAt,

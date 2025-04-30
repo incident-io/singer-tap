@@ -1,0 +1,96 @@
+[
+  {
+    "id": "01FHEHG5JKBX27WFZE5JTSZ2XJ",
+    "alert_source_id": "01FHEHG5JK4V2TM3FKBH9CFY1B",
+    "attributes": [
+      {
+        "attribute": {
+          "id": "01FHEHG5HE67XCV4B7ZF3KV5GJ",
+          "name": "service",
+          "array": false,
+          "type": "string"
+        },
+        "value": {
+          "literal": "api-gateway",
+          "label": "api-gateway"
+        }
+      },
+      {
+        "attribute": {
+          "id": "01FHEHG5HE2KZDJ5DE8DXJHRHJ",
+          "name": "environment",
+          "array": false,
+          "type": "string"
+        },
+        "value": {
+          "literal": "production",
+          "label": "production"
+        }
+      },
+      {
+        "attribute": {
+          "id": "01FHEHG5HE3FE5ZH5P4JF6MJGJ",
+          "name": "severity",
+          "array": false,
+          "type": "string"
+        },
+        "value": {
+          "literal": "critical",
+          "label": "critical"
+        }
+      }
+    ],
+    "created_at": "2023-02-15T18:30:00Z",
+    "deduplication_key": "api-gateway-outage-20230215",
+    "description": "API Gateway is experiencing high error rates in production environment",
+    "status": "triggered",
+    "title": "[CRITICAL] API Gateway Service Outage"
+  },
+  {
+    "id": "01FHEHG5JKBX27WFZE5JTSZ2XK",
+    "alert_source_id": "01FHEHG5JK4V2TM3FKBH9CFY1C",
+    "attributes": [
+      {
+        "attribute": {
+          "id": "01FHEHG5HE67XCV4B7ZF3KV5GK",
+          "name": "service",
+          "array": false,
+          "type": "string"
+        },
+        "value": {
+          "literal": "database-cluster",
+          "label": "database-cluster"
+        }
+      },
+      {
+        "attribute": {
+          "id": "01FHEHG5HE2KZDJ5DE8DXJHRHK",
+          "name": "environment",
+          "array": false,
+          "type": "string"
+        },
+        "value": {
+          "literal": "staging",
+          "label": "staging"
+        }
+      },
+      {
+        "attribute": {
+          "id": "01FHEHG5HE3FE5ZH5P4JF6MJGK",
+          "name": "severity",
+          "array": false,
+          "type": "string"
+        },
+        "value": {
+          "literal": "warning",
+          "label": "warning"
+        }
+      }
+    ],
+    "created_at": "2023-02-16T10:15:00Z",
+    "deduplication_key": "db-cluster-disk-space-20230216",
+    "description": "Database cluster running low on disk space in staging environment",
+    "status": "triggered",
+    "title": "[WARNING] Low Disk Space on Database Cluster"
+  }
+]

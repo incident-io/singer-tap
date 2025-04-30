@@ -34,8 +34,8 @@ func (s *StreamUsers) Output() *Output {
 func (s *StreamUsers) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
 	var (
 		after    *string
-		pageSize = 250
-		results  = []map[string]any{}
+		pageSize int64 = 250
+		results        = []map[string]any{}
 	)
 
 	for {
@@ -49,7 +49,7 @@ func (s *StreamUsers) GetRecords(ctx context.Context, logger kitlog.Logger, cl *
 		}
 
 		for _, element := range page.JSON200.Users {
-			results = append(results, model.UserV1.Serialize(element))
+			results = append(results, model.UserWithRolesV2.Serialize(element))
 		}
 		if count := len(page.JSON200.Users); count == 0 {
 			return results, nil // end pagination

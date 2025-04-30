@@ -22,7 +22,7 @@ func (actionV2) Schema() Property {
 			"description": {
 				Types: []string{"string"},
 			},
-			"assignee":     Optional(UserV1.Schema()),
+			"assignee":     Optional(UserV2.Schema()),
 			"completed_at": Optional(DateTime.Schema()),
 			"created_at":   DateTime.Schema(),
 			"updated_at":   DateTime.Schema(),
@@ -33,7 +33,7 @@ func (actionV2) Schema() Property {
 func (actionV2) Serialize(input client.ActionV2) map[string]any {
 	var assignee map[string]any
 	if input.Assignee != nil {
-		assignee = UserV1.Serialize(*input.Assignee)
+		assignee = UserV2.Serialize(*input.Assignee)
 	}
 
 	return map[string]any{

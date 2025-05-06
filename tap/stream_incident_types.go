@@ -23,7 +23,7 @@ func (s *StreamIncidentTypes) Output() *Output {
 		Schema: &model.Schema{
 			HasAdditionalProperties: false,
 			Type:                    []string{"object"},
-			Properties:              model.IncidentTypeV1.Schema().Properties,
+			Properties:              model.IncidentTypeV2.Schema().Properties,
 		},
 		KeyProperties:      []string{"id"},
 		BookmarkProperties: []string{},

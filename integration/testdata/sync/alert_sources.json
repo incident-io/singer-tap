@@ -1,0 +1,73 @@
+[
+  {
+    "id": "01FHEHG5JK4V2TM3FKBH9CFY1B",
+    "name": "PagerDuty",
+    "source_type": "pagerduty",
+    "template": {
+      "attributes": [
+        {
+          "alert_attribute_id": "01FHEHG5HE67XCV4B7ZF3KV5GJ"
+        },
+        {
+          "alert_attribute_id": "01FHEHG5HE2KZDJ5DE8DXJHRHJ"
+        },
+        {
+          "alert_attribute_id": "01FHEHG5HE3FE5ZH5P4JF6MJGJ"
+        }
+      ],
+      "description": {
+        "label": "Alert Description",
+        "reference": "payload.description"
+      },
+      "title": {
+        "label": "Alert Title",
+        "reference": "payload.title"
+      }
+    }
+  },
+  {
+    "id": "01FHEHG5JK4V2TM3FKBH9CFY1C",
+    "name": "Datadog",
+    "source_type": "datadog",
+    "template": {
+      "attributes": [
+        {
+          "alert_attribute_id": "01FHEHG5HE67XCV4B7ZF3KV5GK"
+        },
+        {
+          "alert_attribute_id": "01FHEHG5HE2KZDJ5DE8DXJHRHK"
+        },
+        {
+          "alert_attribute_id": "01FHEHG5HE3FE5ZH5P4JF6MJGK"
+        }
+      ],
+      "description": {
+        "label": "Alert Description",
+        "reference": "payload.description"
+      },
+      "title": {
+        "label": "Alert Title",
+        "reference": "payload.title"
+      }
+    }
+  },
+  {
+    "id": "01FHEHG5JK4V2TM3FKBH9CFY1D",
+    "name": "Email Alerts",
+    "source_type": "email",
+    "email_options": {
+      "email_address": "alerts@example.com"
+    },
+    "template": {
+      "attributes": [],
+      "description": {
+        "label": "Email Body",
+        "reference": "payload.body"
+      },
+      "title": {
+        "label": "Email Subject",
+        "reference": "payload.subject"
+      }
+    }
+  }
+]

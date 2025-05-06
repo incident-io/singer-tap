@@ -95,6 +95,16 @@
           ]
         },
         "values": []
+      },
+      {
+        "custom_field": {
+          "description": "Teams that were involved in responding to this incident.",
+          "field_type": "multi_select",
+          "id": "01JRZFEX8N6YX0BYT3XNR2G1AY",
+          "name": "Affected teams",
+          "options": []
+        },
+        "values": []
       }
     ],
     "external_issue_reference": null,
@@ -256,7 +266,7 @@
       "is_default": true,
       "name": "Default",
       "private_incidents_only": false,
-      "updated_at": "2023-10-24T09:27:23.104Z"
+      "updated_at": "2025-04-24T14:06:39.439Z"
     },
     "mode": "standard",
     "name": "teal-ostrich",

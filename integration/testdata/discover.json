@@ -184,6 +184,492 @@
         {
           "breadcrumb": [
             "properties",
+            "array"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "id"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "name"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "type"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        }
+      ],
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "array": {
+            "type": [
+              "boolean"
+            ]
+          },
+          "id": {
+            "type": [
+              "string"
+            ]
+          },
+          "name": {
+            "type": [
+              "string"
+            ]
+          },
+          "type": {
+            "type": [
+              "string"
+            ]
+          }
+        },
+        "type": [
+          "object"
+        ]
+      },
+      "stream": "alert_attributes",
+      "tap_stream_id": "alert_attributes"
+    },
+    {
+      "metadata": [
+        {
+          "breadcrumb": [],
+          "metadata": {
+            "forced-replication-method": "FULL_TABLE",
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "email_options"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "id"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "jira_options"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "name"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "source_type"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        }
+      ],
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "email_options": {
+            "properties": {
+              "email_address": {
+                "type": [
+                  "string"
+                ]
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "id": {
+            "type": [
+              "string"
+            ]
+          },
+          "jira_options": {
+            "properties": {
+              "project_ids": {
+                "items": {
+                  "type": "object"
+                },
+                "type": [
+                  "array"
+                ]
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string"
+            ]
+          },
+          "source_type": {
+            "type": [
+              "string"
+            ]
+          }
+        },
+        "type": [
+          "object"
+        ]
+      },
+      "stream": "alert_sources",
+      "tap_stream_id": "alert_sources"
+    },
+    {
+      "metadata": [
+        {
+          "breadcrumb": [],
+          "metadata": {
+            "forced-replication-method": "FULL_TABLE",
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "alert_source_id"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "attributes"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "created_at"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "deduplication_key"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "description"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "id"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "resolved_at"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "source_url"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "status"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "title"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        }
+      ],
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "alert_source_id": {
+            "type": [
+              "string"
+            ]
+          },
+          "attributes": {
+            "items": {
+              "properties": {
+                "array_value": {
+                  "items": {
+                    "properties": {
+                      "catalog_entry": {
+                        "properties": {
+                          "id": {
+                            "type": [
+                              "string"
+                            ]
+                          },
+                          "name": {
+                            "type": [
+                              "string"
+                            ]
+                          }
+                        },
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "label": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "literal": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
+                },
+                "attribute": {
+                  "properties": {
+                    "array": {
+                      "type": [
+                        "boolean"
+                      ]
+                    },
+                    "id": {
+                      "type": [
+                        "string"
+                      ]
+                    },
+                    "name": {
+                      "type": [
+                        "string"
+                      ]
+                    },
+                    "type": {
+                      "type": [
+                        "string"
+                      ]
+                    }
+                  },
+                  "type": [
+                    "object"
+                  ]
+                },
+                "value": {
+                  "properties": {
+                    "catalog_entry": {
+                      "properties": {
+                        "id": {
+                          "type": [
+                            "string"
+                          ]
+                        },
+                        "name": {
+                          "type": [
+                            "string"
+                          ]
+                        }
+                      },
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "label": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "literal": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            "type": [
+              "array"
+            ]
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": [
+              "string"
+            ]
+          },
+          "deduplication_key": {
+            "type": [
+              "string"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": [
+              "string"
+            ]
+          },
+          "resolved_at": {
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "string"
+            ]
+          }
+        },
+        "type": [
+          "object"
+        ]
+      },
+      "stream": "alerts",
+      "tap_stream_id": "alerts"
+    },
+    {
+      "metadata": [
+        {
+          "breadcrumb": [],
+          "metadata": {
+            "forced-replication-method": "FULL_TABLE",
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
             "custom_field_id"
           ],
           "metadata": {

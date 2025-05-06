@@ -34,8 +34,8 @@ func (s *StreamIncidentUpdates) Output() *Output {
 func (s *StreamIncidentUpdates) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
 	var (
 		after    *string
-		pageSize = 250
-		results  = []map[string]any{}
+		pageSize int64 = 250
+		results        = []map[string]any{}
 	)
 
 	for {

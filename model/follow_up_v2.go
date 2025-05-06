@@ -43,7 +43,7 @@ func (followUpV2) Serialize(input client.FollowUpV2) map[string]any {
 
 	var assignee map[string]any
 	if input.Assignee != nil {
-		assignee = UserV1.Serialize(*input.Assignee)
+		assignee = UserV2.Serialize(*input.Assignee)
 	}
 
 	return map[string]any{

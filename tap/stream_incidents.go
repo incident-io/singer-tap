@@ -88,8 +88,8 @@ func (s *StreamIncidents) GetAttachments(ctx context.Context, logger kitlog.Logg
 func (s *StreamIncidents) GetIncidentUpdates(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses, incidentId string) ([]client.IncidentUpdateV2, error) {
 	var (
 		after    *string
-		pageSize = 250
-		results  = []client.IncidentUpdateV2{}
+		pageSize int64 = 250
+		results        = []client.IncidentUpdateV2{}
 	)
 
 	for {

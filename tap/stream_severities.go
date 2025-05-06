@@ -41,7 +41,7 @@ func (s *StreamSeverities) GetRecords(ctx context.Context, logger kitlog.Logger,
 	}
 
 	for _, element := range response.JSON200.Severities {
-		results = append(results, model.SeverityV2.Serialize(&element))
+		results = append(results, model.SeverityV1.Serialize(&element))
 	}
 
 	return results, nil

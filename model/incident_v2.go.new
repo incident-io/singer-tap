@@ -27,10 +27,10 @@ func (incidentV2) Schema() Property {
 			"external_issue_reference":  Optional(ExternalIssueReferenceV2.Schema()),
 			"attachments":               Optional(ArrayOf(IncidentAttachmentV1.Schema())),
 			"updates":                   Optional(ArrayOf(IncidentUpdateV2.Schema())),
-			"incident_role_assignments": ArrayOf(IncidentRoleAssignmentV2.Schema()),
+			"incident_role_assignments": ArrayOf(IncidentRoleAssignmentV1.Schema()),
 			"incident_status":           IncidentStatusV2.Schema(),
 			"incident_timestamp_values": Optional(ArrayOf(IncidentTimestampWithValueV2.Schema())),
-			"incident_type":             Optional(IncidentTypeV2.Schema()),
+			"incident_type":             Optional(IncidentTypeV1.Schema()),
 			"mode": {
 				Types: []string{"string"},
 			},
@@ -108,13 +108,13 @@ func (incidentV2) Serialize(
 		"attachments":              attachments,
 		"updates":                  updates,
 		"incident_role_assignments": lo.Map(input.IncidentRoleAssignments, func(assignment client.IncidentRoleAssignmentV2, _ int) map[string]any {
-			return IncidentRoleAssignmentV2.Serialize(assignment)
+			return IncidentRoleAssignmentV1.Serialize(assignment)
 		}),
 		"incident_status": IncidentStatusV2.Serialize(input.IncidentStatus),
 		"incident_timestamp_values": lo.Map(*input.IncidentTimestampValues, func(timestamp client.IncidentTimestampWithValueV2, _ int) map[string]any {
 			return IncidentTimestampWithValueV2.Serialize(timestamp)
 		}),
-		"incident_type":             IncidentTypeV2.Serialize(input.IncidentType),
+		"incident_type":             IncidentTypeV1.Serialize(input.IncidentType),
 		"mode":                      input.Mode,
 		"permalink":                 input.Permalink,
 		"postmortem_document_url":   input.PostmortemDocumentUrl,

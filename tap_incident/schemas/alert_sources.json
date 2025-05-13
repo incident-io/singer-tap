@@ -76,6 +76,10 @@
             }
           }
         }
+      },
+      "time_extracted": {
+        "type": ["string"],
+        "format": "date-time"
       }
     }
   }

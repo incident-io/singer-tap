@@ -13,6 +13,10 @@
       },
       "value": {
         "type": ["string"]
+      },
+      "time_extracted": {
+        "type": ["string"],
+        "format": "date-time"
       }
     }
   }

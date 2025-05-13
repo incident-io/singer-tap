@@ -515,6 +515,10 @@
       },
       "workload_minutes_working": {
         "type": ["number", "null"]
+      },
+      "time_extracted": {
+        "type": ["string"],
+        "format": "date-time"
       }
     }
   }

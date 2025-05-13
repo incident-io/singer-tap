@@ -68,6 +68,45 @@ class Stream(ABC):
             return update_bookmark(state, self.name, self.replication_key, record[self.replication_key])
             
         return state
+    
+    def update_state_for_full_table(self, state: Dict[str, Any], records: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Update state for FULL_TABLE replication mode.
+        
+        This processes all records at once after they've been synced to find the latest
+        value of the replication key for a future incremental sync.
+        
+        Args:
+            state: Current state
+            records: All synced records
+            
+        Returns:
+            Updated state
+        """
+        if not self.replication_key or not self.valid_replication_keys:
+            return state
+            
+        # Find the record with the latest value of the replication key
+        latest_record = None
+        latest_time = None
+        
+        for record in records:
+            if self.replication_key not in record:
+                continue
+                
+            try:
+                record_time = datetime.fromisoformat(record[self.replication_key].replace("Z", "+00:00"))
+                if latest_time is None or record_time > latest_time:
+                    latest_time = record_time
+                    latest_record = record
+            except (ValueError, TypeError):
+                LOGGER.warning(f"Invalid date format for {self.replication_key} in record: {record.get('id', 'unknown')}")
+                continue
+        
+        # Update the state with the latest record
+        if latest_record:
+            state = update_bookmark(state, self.name, self.replication_key, latest_record[self.replication_key])
+        
+        return state
 
 
 class ActionsStream(Stream):
@@ -79,7 +118,7 @@ class ActionsStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "updated_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "updated_at" 
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync actions."""
@@ -88,22 +127,32 @@ class ActionsStream(Stream):
         
         actions = client.get_actions()
         record_count = 0
+        all_records = []  # Keep track of all records for FULL_TABLE
         
         for action in actions:
+            all_records.append(action)
+            
             # If we're doing incremental and have a bookmark date, filter records
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(action[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
             record_count += 1
-            state = self.update_state(state, action)
             
-            # Every 100 records, write the state
-            if record_count % 100 == 0:
-                write_state(state)
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, action)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield action
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
         
         # Write the state one final time
         write_state(state)
@@ -118,7 +167,7 @@ class AlertsStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "created_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "created_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync alerts."""
@@ -127,22 +176,32 @@ class AlertsStream(Stream):
         
         alerts = client.get_alerts()
         record_count = 0
+        all_records = []  # Keep track of all records for FULL_TABLE
         
         for alert in alerts:
+            all_records.append(alert)
+            
             # Filter by bookmark date for incremental replication
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(alert[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
             record_count += 1
-            state = self.update_state(state, alert)
             
-            # Every 100 records, write the state
-            if record_count % 100 == 0:
-                write_state(state)
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, alert)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield alert
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
         
         # Write the state one final time
         write_state(state)
@@ -181,7 +240,7 @@ class CustomFieldsStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "updated_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync custom fields."""
@@ -190,22 +249,32 @@ class CustomFieldsStream(Stream):
         
         custom_fields = client.get_custom_fields()
         record_count = 0
+        all_records = []
         
         for custom_field in custom_fields:
+            all_records.append(custom_field)
+            
             # Filter by bookmark date for incremental replication
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(custom_field[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
             record_count += 1
-            state = self.update_state(state, custom_field)
             
-            # Every 100 records, write the state
-            if record_count % 100 == 0:
-                write_state(state)
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, custom_field)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield custom_field
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
             
         # Write the state one final time
         write_state(state)
@@ -240,7 +309,7 @@ class FollowUpsStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "updated_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync follow ups."""
@@ -249,22 +318,32 @@ class FollowUpsStream(Stream):
         
         follow_ups = client.get_follow_ups()
         record_count = 0
+        all_records = []
         
         for follow_up in follow_ups:
+            all_records.append(follow_up)
+            
             # Filter by bookmark date for incremental replication
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(follow_up[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
             record_count += 1
-            state = self.update_state(state, follow_up)
             
-            # Every 100 records, write the state
-            if record_count % 100 == 0:
-                write_state(state)
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, follow_up)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield follow_up
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
             
         # Write the state one final time
         write_state(state)
@@ -279,7 +358,7 @@ class IncidentRolesStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "updated_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync incident roles."""
@@ -288,22 +367,32 @@ class IncidentRolesStream(Stream):
         
         roles = client.get_incident_roles()
         record_count = 0
+        all_records = []
         
         for role in roles:
+            all_records.append(role)
+            
             # Filter by bookmark date for incremental replication
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(role[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
             record_count += 1
-            state = self.update_state(state, role)
             
-            # Every 100 records, write the state
-            if record_count % 100 == 0:
-                write_state(state)
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, role)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield role
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
             
         # Write the state one final time
         write_state(state)
@@ -318,7 +407,7 @@ class IncidentStatusesStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "updated_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync incident statuses."""
@@ -327,22 +416,32 @@ class IncidentStatusesStream(Stream):
         
         statuses = client.get_incident_statuses()
         record_count = 0
+        all_records = []
         
         for status in statuses:
+            all_records.append(status)
+            
             # Filter by bookmark date for incremental replication
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(status[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
             record_count += 1
-            state = self.update_state(state, status)
             
-            # Every 100 records, write the state
-            if record_count % 100 == 0:
-                write_state(state)
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, status)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield status
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
             
         # Write the state one final time
         write_state(state)
@@ -369,7 +468,7 @@ class IncidentTypesStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "updated_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync incident types."""
@@ -378,22 +477,32 @@ class IncidentTypesStream(Stream):
         
         incident_types = client.get_incident_types()
         record_count = 0
+        all_records = []
         
         for incident_type in incident_types:
+            all_records.append(incident_type)
+            
             # Filter by bookmark date for incremental replication
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(incident_type[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
             record_count += 1
-            state = self.update_state(state, incident_type)
             
-            # Every 100 records, write the state
-            if record_count % 100 == 0:
-                write_state(state)
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, incident_type)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield incident_type
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
             
         # Write the state one final time
         write_state(state)
@@ -408,7 +517,7 @@ class IncidentUpdatesStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "created_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "created_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync incident updates."""
@@ -417,22 +526,32 @@ class IncidentUpdatesStream(Stream):
         
         updates = client.get_incident_updates()
         record_count = 0
+        all_records = []
         
         for update in updates:
+            all_records.append(update)
+            
             # Filter by bookmark date for incremental replication
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(update[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
             record_count += 1
-            state = self.update_state(state, update)
             
-            # Every 100 records, write the state
-            if record_count % 100 == 0:
-                write_state(state)
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, update)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield update
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
             
         # Write the state one final time
         write_state(state)
@@ -447,7 +566,7 @@ class IncidentsStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "updated_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync incidents."""
@@ -456,10 +575,13 @@ class IncidentsStream(Stream):
         
         incidents = client.get_incidents()
         record_count = 0
+        all_records = []
         
         for incident in incidents:
+            all_records.append(incident)
+            
             # Filter by bookmark date for incremental replication
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(incident[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
@@ -474,9 +596,20 @@ class IncidentsStream(Stream):
             incident["updates"] = updates
             
             record_count += 1
-            state = self.update_state(state, incident)            
+            
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, incident)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield incident
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
             
         # Write the state one final time
         write_state(state)
@@ -491,7 +624,7 @@ class SeveritiesStream(Stream):
     
     def __init__(self, replication_method=None, replication_key=None):
         self.replication_method = replication_method or "FULL_TABLE"
-        self.replication_key = replication_key or "updated_at" if self.replication_method == "INCREMENTAL" else None
+        self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
         """Sync severities."""
@@ -500,22 +633,32 @@ class SeveritiesStream(Stream):
         
         severities = client.get_severities()
         record_count = 0
+        all_records = []
         
         for severity in severities:
+            all_records.append(severity)
+            
             # Filter by bookmark date for incremental replication
-            if starting_date and self.replication_key:
+            if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
                 record_date = datetime.fromisoformat(severity[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
             record_count += 1
-            state = self.update_state(state, severity)
             
-            # Every 100 records, write the state
-            if record_count % 100 == 0:
-                write_state(state)
+            # For incremental, update state record by record
+            if self.replication_method == "INCREMENTAL":
+                state = self.update_state(state, severity)
+            
+                # Every 100 records, write the state
+                if record_count % 100 == 0:
+                    write_state(state)
                 
             yield severity
+        
+        # For FULL_TABLE, update state once at the end with the latest record
+        if self.replication_method == "FULL_TABLE":
+            state = self.update_state_for_full_table(state, all_records)
             
         # Write the state one final time
         write_state(state)

@@ -7,6 +7,7 @@ from typing import Dict, Any, List, Optional, Set
 
 from tap_incident.client import IncidentClient
 from tap_incident.streams import STREAMS
+from tap_incident.state import write_state
 
 LOGGER = singer.get_logger()
 
@@ -66,11 +67,50 @@ def get_selected_fields(stream: Dict[str, Any]) -> Set[str]:
     return selected_fields
 
 
+def get_stream_replication_method(stream: Dict[str, Any]) -> str:
+    """Get replication method from catalog metadata.
+    
+    Args:
+        stream: Stream definition from catalog
+        
+    Returns:
+        Replication method (FULL_TABLE or INCREMENTAL)
+    """
+    mdata = singer.metadata.to_map(stream["metadata"])
+    top_level_md = mdata.get(())
+    
+    # Check for forced replication method
+    forced_method = top_level_md.get("forced-replication-method")
+    if forced_method:
+        return forced_method
+    
+    # Check for user-specified method
+    return top_level_md.get("replication-method", "FULL_TABLE")
+
+
+def get_stream_replication_key(stream: Dict[str, Any]) -> Optional[str]:
+    """Get replication key from catalog metadata.
+    
+    Args:
+        stream: Stream definition from catalog
+        
+    Returns:
+        Replication key field name
+    """
+    mdata = singer.metadata.to_map(stream["metadata"])
+    top_level_md = mdata.get(())
+    
+    return top_level_md.get("replication-key")
+
+
 def sync_stream(
     client: IncidentClient,
     stream_name: str,
     stream_schema: Dict[str, Any],
     selected_fields: Set[str],
+    state: Dict[str, Any],
+    replication_method: str = "FULL_TABLE",
+    replication_key: Optional[str] = None,
 ) -> None:
     """Sync a single stream.
     
@@ -79,8 +119,14 @@ def sync_stream(
         stream_name: Name of the stream to sync
         stream_schema: Schema for the stream
         selected_fields: Set of selected field names
+        state: Current state
+        replication_method: Replication method
+        replication_key: Replication key field
     """
     LOGGER.info(f"Syncing stream: {stream_name}")
+    LOGGER.info(f"Replication method: {replication_method}")
+    if replication_method == "INCREMENTAL":
+        LOGGER.info(f"Replication key: {replication_key}")
     
     extraction_time = datetime.datetime.now(datetime.timezone.utc)
     
@@ -94,9 +140,21 @@ def sync_stream(
     # Get stream instance from registry
     stream_object = STREAMS[stream_name]
     
+    # Update the stream's replication settings
+    if hasattr(stream_object, "replication_method"):
+        stream_object.replication_method = replication_method
+    
+    if hasattr(stream_object, "replication_key") and replication_method == "INCREMENTAL":
+        if replication_key and replication_key in stream_object.valid_replication_keys:
+            stream_object.replication_key = replication_key
+        elif len(stream_object.valid_replication_keys) > 0:
+            # Use the first valid key if user didn't specify one
+            stream_object.replication_key = stream_object.valid_replication_keys[0]
+            LOGGER.info(f"Using default replication key: {stream_object.replication_key}")
+    
     # Sync records
     record_count = 0
-    for record in stream_object.sync(client):
+    for record in stream_object.sync(client, state):
         # Filter record to only include selected fields
         filtered_record = {k: v for k, v in record.items() if k in selected_fields}
         
@@ -123,6 +181,11 @@ def sync(
         catalog: Singer catalog (optional)
         state: Singer state (optional)
     """
+    state = state or {}
+    
+    # Write initial state to establish a baseline for incremental syncs
+    write_state(state)
+    
     if catalog:
         # Use provided catalog
         selected_streams = get_selected_streams(catalog)
@@ -140,9 +203,18 @@ def sync(
             continue
             
         selected_fields = get_selected_fields(stream)
+        replication_method = get_stream_replication_method(stream)
+        replication_key = get_stream_replication_key(stream)
+        
         sync_stream(
             client,
             stream_name,
             stream["schema"],
             selected_fields,
+            state,
+            replication_method,
+            replication_key,
         )
+        
+    # Write final state
+    write_state(state)

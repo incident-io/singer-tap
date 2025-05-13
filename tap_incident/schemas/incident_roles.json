@@ -30,6 +30,10 @@
       "updated_at": {
         "type": ["string"],
         "format": "date-time"
+      },
+      "time_extracted": {
+        "type": ["string"],
+        "format": "date-time"
       }
     }
   }

@@ -1,0 +1,81 @@
+{
+    "type": ["object"],
+    "additionalProperties": false,
+    "properties": {
+      "assignee": {
+        "type": ["object", "null"],
+        "properties": {
+          "email": {
+            "type": ["null", "string"]
+          },
+          "id": {
+            "type": ["string"]
+          },
+          "name": {
+            "type": ["string"]
+          },
+          "slack_user_id": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "completed_at": {
+        "type": ["string", "null"],
+        "format": "date-time"
+      },
+      "created_at": {
+        "type": ["string"],
+        "format": "date-time"
+      },
+      "description": {
+        "type": ["string", "null"]
+      },
+      "external_issue_reference": {
+        "type": ["object", "null"],
+        "properties": {
+          "issue_name": {
+            "type": ["string"]
+          },
+          "issue_permalink": {
+            "type": ["string"]
+          },
+          "provider": {
+            "type": ["string"]
+          }
+        }
+      },
+      "id": {
+        "type": ["string"]
+      },
+      "incident_id": {
+        "type": ["string"]
+      },
+      "priority": {
+        "type": ["object", "null"],
+        "properties": {
+          "description": {
+            "type": ["string", "null"]
+          },
+          "id": {
+            "type": ["string"]
+          },
+          "name": {
+            "type": ["string"]
+          },
+          "rank": {
+            "type": ["integer"]
+          }
+        }
+      },
+      "status": {
+        "type": ["string"]
+      },
+      "title": {
+        "type": ["string"]
+      },
+      "updated_at": {
+        "type": ["string"],
+        "format": "date-time"
+      }
+    }
+  }

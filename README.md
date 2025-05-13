@@ -6,49 +6,129 @@ a data warehouse.
 
 ## Getting started
 
-macOS users can install the catalog using brew:
+### Installation
+
+#### Using pip
 
 ```console
-brew tap incident-io/homebrew-taps
-brew install tap-incident
+pip install tap-incident
 ```
 
-Otherwise, ensure that the go runtime is installed and then:
+#### From source
 
 ```console
-go install github.com/incident-io/singer-tap/cmd/tap-incident@latest
+pip install git+https://github.com/Bilanc/bilanc-incident-io-tap.git
 ```
 
-Once installed, see [documentation](docs) for example configurations.
+### Configuration
 
-## Using Docker
+Create a `config.json` file that looks like this:
 
-[hub]: https://hub.docker.com/r/incidentio/singer-tap/tags
+```json
+{
+  "api_key": "<your-api-key>",
+  "endpoint": "https://api.incident.io"
+}
+```
 
-A Docker image is available for containerised environments; see [Docker
-Hub][hub] for more details of the image and available tags.
+You'll need an incident.io API key with permission to:
+- View data, like public incidents and organisation settings
+- View catalog types and entries
 
-## Integration snapshots
+If you want this tap to have access to private incident data, also include the
+following scope:
+- View all incident data, including private incidents
 
-The `integration` package contains snapshots of data from the integration test
-incident.io account. These snapshots are not intended to be managed by hand, and
-should be updated automatically instead.
-
-Whenever you need to update the snapshots, run:
+### Running the tap
 
 ```console
-$ export TEST_INCIDENT_API_KEY="<test-key>"
-$ export TAP_SNAPSHOT_UPDATE='true' ginkgo -tags=integration -r ./integration
-Writing snapshot file testdata/sync/follow_ups.json
-...
+tap-incident --config config.json
 ```
-[test-key]: https://start.1password.com/open/i?a=5P4EMQNU2RGBHC6TS4KB3PUFO4&v=vdgfxfm7m46sq2gzodftwi2yle&i=gayjefie3pcngvbv5tz2vsbndi&h=incident-io.1password.com
 
-For incident.io employees, you can find the test key in 1Password
-[here][test-key].
+### Discovery mode
 
-## Contributing
+To use the discovery mode, which outputs a catalog of streams:
 
-We're happy to accept open-source contributions or feedback. Just open a
-PR/issue and we'll get back to you. This repo contains details on
-[how to get started with local development](./development.md).
+```console
+tap-incident --config config.json --discover > catalog.json
+```
+
+### Configuring exports
+
+By default, the tap will export all data it can.
+
+If you want to control what fields and tables you wish to export, you will need a catalog file. You can use the discovery command to create a default catalog file which will contain all streams and columns along with their properties.
+
+```console
+$ tap-incident --discover --config=config.json > catalog.json
+```
+
+The catalog file follows the Singer specification to enable or disable a stream. Add the field `selected: true|false` inside the stream's top-level metadata. For example, to disable exporting severities:
+
+```json
+{
+  "streams": [
+    {
+      "stream": "severities",
+      "tap_stream_id": "severities",
+      "schema": {
+        ...
+      },
+      "metadata": [
+        {
+          "breadcrumb": [],
+          "metadata": {
+            "selected": false, // Add this
+            "inclusion": "available",
+            "selected-by-default": true,
+            "forced-replication-method": "FULL_TABLE"
+          }
+        },
+        ...
+```
+
+You can adjust which columns within a stream you wish to export similarly, by adding the same field inside the metadata for that column, for example to not export a description field:
+
+```json
+    {
+      "breadcrumb": [
+        "properties",
+        "description"
+      ],
+      "metadata": {
+        "inclusion": "available",
+        "selected": false, // Add this
+        "selected-by-default": true
+      }
+    },
+```
+
+## Running with a catalog file
+
+```console
+tap-incident --config config.json --catalog catalog.json
+```
+
+## Available streams
+
+The tap-incident package supports the following streams:
+
+- actions
+- alerts
+- alert_attributes
+- alert_sources
+- custom_field_options
+- custom_fields
+- follow_ups
+- incident_roles
+- incident_statuses
+- incident_timestamps
+- incident_types
+- incident_updates
+- incidents
+- severities
+- users
+
+## For developers
+
+If you want to contribute to this Singer tap, please see the [development guide](https://github.com/incident-io/tap-incident/blob/main/development.md) for more details.

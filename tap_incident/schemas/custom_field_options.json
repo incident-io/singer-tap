@@ -1,0 +1,18 @@
+{
+    "type": ["object"],
+    "additionalProperties": false,
+    "properties": {
+      "custom_field_id": {
+        "type": ["string"]
+      },
+      "id": {
+        "type": ["string"]
+      },
+      "sort_key": {
+        "type": ["integer"]
+      },
+      "value": {
+        "type": ["string"]
+      }
+    }
+  }

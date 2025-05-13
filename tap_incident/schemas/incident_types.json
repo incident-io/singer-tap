@@ -1,0 +1,32 @@
+{
+    "type": ["object"],
+    "additionalProperties": false,
+    "properties": {
+      "create_in_triage": {
+        "type": ["string"]
+      },
+      "created_at": {
+        "type": ["string"],
+        "format": "date-time"
+      },
+      "description": {
+        "type": ["string"]
+      },
+      "id": {
+        "type": ["string"]
+      },
+      "is_default": {
+        "type": ["boolean"]
+      },
+      "name": {
+        "type": ["string"]
+      },
+      "private_incidents_only": {
+        "type": ["boolean"]
+      },
+      "updated_at": {
+        "type": ["string"],
+        "format": "date-time"
+      }
+    }
+  }

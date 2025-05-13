@@ -1,0 +1,107 @@
+{
+    "type": ["object"],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": ["string"]
+      },
+      "alert_source_id": {
+        "type": ["string"]
+      },
+      "attributes": {
+        "type": ["array"],
+        "items": {
+          "type": "object",
+          "properties": {
+            "attribute": {
+              "type": ["object"],
+              "properties": {
+                "id": {
+                  "type": ["string"]
+                },
+                "name": {
+                  "type": ["string"]
+                },
+                "array": {
+                  "type": ["boolean"]
+                },
+                "type": {
+                  "type": ["string"]
+                }
+              }
+            },
+            "value": {
+              "type": ["object", "null"],
+              "properties": {
+                "catalog_entry": {
+                  "type": ["object", "null"],
+                  "properties": {
+                    "id": {
+                      "type": ["string"]
+                    },
+                    "name": {
+                      "type": ["string"]
+                    }
+                  }
+                },
+                "label": {
+                  "type": ["string", "null"]
+                },
+                "literal": {
+                  "type": ["string", "null"]
+                }
+              }
+            },
+            "array_value": {
+              "type": ["array", "null"],
+              "items": {
+                "type": "object",
+                "properties": {
+                  "catalog_entry": {
+                    "type": ["object", "null"],
+                    "properties": {
+                      "id": {
+                        "type": ["string"]
+                      },
+                      "name": {
+                        "type": ["string"]
+                      }
+                    }
+                  },
+                  "label": {
+                    "type": ["string", "null"]
+                  },
+                  "literal": {
+                    "type": ["string", "null"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "created_at": {
+        "type": ["string"],
+        "format": "date-time"
+      },
+      "deduplication_key": {
+        "type": ["string"]
+      },
+      "description": {
+        "type": ["string", "null"]
+      },
+      "resolved_at": {
+        "type": ["string", "null"],
+        "format": "date-time"
+      },
+      "source_url": {
+        "type": ["string", "null"]
+      },
+      "status": {
+        "type": ["string"]
+      },
+      "title": {
+        "type": ["string"]
+      }
+    }
+  }

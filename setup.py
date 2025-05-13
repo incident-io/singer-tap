@@ -12,7 +12,7 @@ setup(
     long_description_content_type="text/markdown",
     author="incident.io",
     author_email="support@incident.io",
-    url="https://github.com/incident-io/tap-incident",
+    url="https://github.com/Bilanc/bilanc-incident-io-tap",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

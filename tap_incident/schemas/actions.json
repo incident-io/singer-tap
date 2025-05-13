@@ -1,0 +1,47 @@
+{
+    "type": ["object"],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": ["string"]
+      },
+      "incident_id": {
+        "type": ["string"]
+      },
+      "status": {
+        "type": ["string"]
+      },
+      "description": {
+        "type": ["string"]
+      },
+      "assignee": {
+        "type": ["object", "null"],
+        "properties": {
+          "email": {
+            "type": ["null", "string"]
+          },
+          "id": {
+            "type": ["string"]
+          },
+          "name": {
+            "type": ["string"]
+          },
+          "slack_user_id": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "completed_at": {
+        "type": ["string", "null"],
+        "format": "date-time"
+      },
+      "created_at": {
+        "type": ["string"],
+        "format": "date-time"
+      },
+      "updated_at": {
+        "type": ["string"],
+        "format": "date-time"
+      }
+    }
+  }

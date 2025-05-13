@@ -1,0 +1,18 @@
+{
+    "type": ["object"],
+    "additionalProperties": false,
+    "properties": {
+      "email": {
+        "type": ["null", "string"]
+      },
+      "id": {
+        "type": ["string"]
+      },
+      "name": {
+        "type": ["string"]
+      },
+      "slack_user_id": {
+        "type": ["null", "string"]
+      }
+    }
+  }

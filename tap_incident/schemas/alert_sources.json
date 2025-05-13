@@ -1,0 +1,81 @@
+{
+    "type": ["object"],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": ["string"]
+      },
+      "name": {
+        "type": ["string"]
+      },
+      "source_type": {
+        "type": ["string"]
+      },
+      "secret_token": {
+        "type": ["string", "null"]
+      },
+      "email_options": {
+        "type": ["object", "null"],
+        "properties": {
+          "email_address": {
+            "type": ["string"]
+          }
+        }
+      },
+      "jira_options": {
+        "type": ["object", "null"],
+        "properties": {
+          "project_ids": {
+            "type": ["array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "template": {
+        "type": ["object"],
+        "properties": {
+          "attributes": {
+            "type": ["array"],
+            "items": {
+              "type": "object",
+              "properties": {
+                "alert_attribute_id": {
+                  "type": ["string"]
+                }
+              }
+            }
+          },
+          "description": {
+            "type": ["object"],
+            "properties": {
+              "label": {
+                "type": ["string"]
+              },
+              "literal": {
+                "type": ["string", "null"]
+              },
+              "reference": {
+                "type": ["string", "null"]
+              }
+            }
+          },
+          "title": {
+            "type": ["object"],
+            "properties": {
+              "label": {
+                "type": ["string"]
+              },
+              "literal": {
+                "type": ["string", "null"]
+              },
+              "reference": {
+                "type": ["string", "null"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }

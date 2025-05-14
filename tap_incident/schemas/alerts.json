@@ -1,111 +1,78 @@
 {
-    "type": ["object"],
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "type": ["string"]
-      },
-      "alert_source_id": {
-        "type": ["string"]
-      },
-      "attributes": {
-        "type": ["array"],
-        "items": {
-          "type": "object",
-          "properties": {
-            "attribute": {
-              "type": ["object"],
-              "properties": {
-                "id": {
-                  "type": ["string"]
-                },
-                "name": {
-                  "type": ["string"]
-                },
-                "array": {
-                  "type": ["boolean"]
-                },
-                "type": {
-                  "type": ["string"]
-                }
-              }
-            },
-            "value": {
-              "type": ["object", "null"],
-              "properties": {
-                "catalog_entry": {
-                  "type": ["object", "null"],
-                  "properties": {
-                    "id": {
-                      "type": ["string"]
-                    },
-                    "name": {
-                      "type": ["string"]
-                    }
-                  }
-                },
-                "label": {
-                  "type": ["string", "null"]
-                },
-                "literal": {
-                  "type": ["string", "null"]
-                }
-              }
-            },
-            "array_value": {
-              "type": ["array", "null"],
-              "items": {
-                "type": "object",
-                "properties": {
-                  "catalog_entry": {
-                    "type": ["object", "null"],
-                    "properties": {
-                      "id": {
-                        "type": ["string"]
-                      },
-                      "name": {
-                        "type": ["string"]
-                      }
-                    }
-                  },
-                  "label": {
-                    "type": ["string", "null"]
-                  },
-                  "literal": {
-                    "type": ["string", "null"]
-                  }
-                }
-              }
-            }
-          }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "incident_id": {
+      "type": ["string", "null"]
+    },
+    "alert_source_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "body": {
+      "type": ["string", "null"]
+    },
+    "source_url": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new", 
+        "identified", 
+        "rejected", 
+        "assigned", 
+        "resolved"
+      ]
+    },
+    "deduplication_key": {
+      "type": ["string", "null"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "detected_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "closed_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "external_issue_reference": {
+      "type": ["object", "null"],
+      "properties": {
+        "issue_name": {
+          "type": "string"
+        },
+        "provider_name": {
+          "type": "string"
+        },
+        "provider_type": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "time_extracted": {
+          "type": ["string"],
+          "format": "date-time"
         }
       },
-      "created_at": {
-        "type": ["string"],
-        "format": "date-time"
-      },
-      "deduplication_key": {
-        "type": ["string"]
-      },
-      "description": {
-        "type": ["string", "null"]
-      },
-      "resolved_at": {
-        "type": ["string", "null"],
-        "format": "date-time"
-      },
-      "source_url": {
-        "type": ["string", "null"]
-      },
-      "status": {
-        "type": ["string"]
-      },
-      "title": {
-        "type": ["string"]
-      },
-      "time_extracted": {
-        "type": ["string"],
-        "format": "date-time"
-      }
+      "required": ["issue_name", "provider_name", "provider_type", "url"]
     }
-  }
+  },
+  "additionalProperties": false,
+  "required": ["id", "alert_source_id", "title", "status", "created_at", "updated_at"]
+}

@@ -1,19 +1,24 @@
 {
-    "type": ["object"],
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "type": ["string"]
-      },
-      "name": {
-        "type": ["string"]
-      },
-      "rank": {
-        "type": ["integer"]
-      },
-      "time_extracted": {
-        "type": ["string"],
-        "format": "date-time"
-      }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique ID of this incident timestamp"
+    },
+    "name": {
+      "type": "string",
+      "description": "Unique name of this timestamp"
+    },
+    "rank": {
+      "type": "integer",
+      "description": "Order in which this timestamp should be shown"
+    },
+    "time_extracted": {
+      "type": ["string"],
+      "format": "date-time"
     }
-  }
+  },
+  "additionalProperties": false,
+  "required": ["id", "name", "rank"]
+}

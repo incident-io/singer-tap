@@ -1,36 +1,32 @@
 {
-    "type": ["object"],
-    "additionalProperties": false,
-    "properties": {
-      "create_in_triage": {
-        "type": ["string"]
-      },
-      "created_at": {
-        "type": ["string"],
-        "format": "date-time"
-      },
-      "description": {
-        "type": ["string"]
-      },
-      "id": {
-        "type": ["string"]
-      },
-      "is_default": {
-        "type": ["boolean"]
-      },
-      "name": {
-        "type": ["string"]
-      },
-      "private_incidents_only": {
-        "type": ["boolean"]
-      },
-      "updated_at": {
-        "type": ["string"],
-        "format": "date-time"
-      },
-      "time_extracted": {
-        "type": ["string"],
-        "format": "date-time"
-      }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "is_default": {
+      "type": "boolean"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_extracted": {
+      "type": ["string"],
+      "format": "date-time"
     }
-  }
+  },
+  "additionalProperties": false,
+  "required": ["id", "name", "description", "created_at", "updated_at"]
+}

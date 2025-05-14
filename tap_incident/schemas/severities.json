@@ -1,30 +1,32 @@
 {
-    "type": ["object"],
-    "additionalProperties": false,
-    "properties": {
-      "created_at": {
-        "type": ["string"],
-        "format": "date-time"
-      },
-      "description": {
-        "type": ["string"]
-      },
-      "id": {
-        "type": ["string"]
-      },
-      "name": {
-        "type": ["string"]
-      },
-      "rank": {
-        "type": ["integer"]
-      },
-      "updated_at": {
-        "type": ["string"],
-        "format": "date-time"
-      },
-      "time_extracted": {
-        "type": ["string"],
-        "format": "date-time"
-      }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "rank": {
+      "type": "integer"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_extracted": {
+      "type": ["string"],
+      "format": "date-time"
     }
-  }
+  },
+  "additionalProperties": false,
+  "required": ["id", "name", "description", "rank", "created_at", "updated_at"]
+}

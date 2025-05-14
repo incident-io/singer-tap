@@ -1,85 +1,152 @@
 {
-    "type": ["object"],
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "type": ["string"]
-      },
-      "name": {
-        "type": ["string"]
-      },
-      "source_type": {
-        "type": ["string"]
-      },
-      "secret_token": {
-        "type": ["string", "null"]
-      },
-      "email_options": {
-        "type": ["object", "null"],
-        "properties": {
-          "email_address": {
-            "type": ["string"]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": ["string", "null"]
+    },
+    "configuration_url": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "secret_token": {
+      "type": ["string", "null"]
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "api",
+        "grafana",
+        "prometheus",
+        "datadog",
+        "newrelic",
+        "pagerduty",
+        "sentry",
+        "pingdom",
+        "statuscake",
+        "cloudwatch",
+        "stackdriver",
+        "external",
+        "custom"
+      ]
+    },
+    "template": {
+      "type": ["object", "null"],
+      "description": "Template used to create alerts from this source",
+      "properties": {
+        "attributes": {
+          "type": "array",
+          "description": "Attributes to set on alerts coming from this source, with a binding describing how to set them",
+          "items": {
+            "type": "object",
+            "properties": {
+              "alert_attribute_id": {
+                "type": "string",
+                "description": "ID of the alert attribute to set with this binding"
+              },
+              "binding": {
+                "type": "object",
+                "description": "EngineParamBindingV2"
+              }
+            },
+            "required": ["alert_attribute_id", "binding"]
           }
-        }
-      },
-      "jira_options": {
-        "type": ["object", "null"],
-        "properties": {
-          "project_ids": {
-            "type": ["array"],
-            "items": {
-              "type": "string"
+        },
+        "description": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "description": "Human readable label to be displayed for user to select"
+            },
+            "literal": {
+              "type": ["string", "null"],
+              "description": "If set, this is the literal value of the step parameter"
+            },
+            "reference": {
+              "type": ["string", "null"],
+              "description": "If set, this is the reference into the trigger scope that is the value of this parameter"
             }
-          }
-        }
-      },
-      "template": {
-        "type": ["object"],
-        "properties": {
-          "attributes": {
-            "type": ["array"],
-            "items": {
-              "type": "object",
-              "properties": {
-                "alert_attribute_id": {
-                  "type": ["string"]
+          },
+          "required": ["label"]
+        },
+        "expressions": {
+          "type": "array",
+          "description": "Expressions available for use in bindings within this template",
+          "items": {
+            "type": "object",
+            "properties": {
+              "else_branch": {
+                "type": ["object", "null"],
+                "description": "ExpressionElseBranchV2"
+              },
+              "label": {
+                "type": "string",
+                "description": "The human readable label of the expression"
+              },
+              "operations": {
+                "type": "array",
+                "description": "ExpressionOperationV2",
+                "items": {
+                  "type": "object"
                 }
-              }
-            }
-          },
-          "description": {
-            "type": ["object"],
-            "properties": {
-              "label": {
-                "type": ["string"]
-              },
-              "literal": {
-                "type": ["string", "null"]
               },
               "reference": {
-                "type": ["string", "null"]
-              }
-            }
-          },
-          "title": {
-            "type": ["object"],
-            "properties": {
-              "label": {
-                "type": ["string"]
+                "type": "string",
+                "description": "A short ID that can be used to reference the expression"
               },
-              "literal": {
-                "type": ["string", "null"]
+              "returns": {
+                "type": "object",
+                "description": "ReturnsMetaV2"
               },
-              "reference": {
-                "type": ["string", "null"]
+              "root_reference": {
+                "type": "string",
+                "description": "The root reference for this expression (i.e. where the expression starts)"
               }
-            }
+            },
+            "required": ["label", "operations", "reference", "returns", "root_reference"]
           }
+        },
+        "title": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "description": "Human readable label to be displayed for user to select"
+            },
+            "literal": {
+              "type": ["string", "null"],
+              "description": "If set, this is the literal value of the step parameter"
+            },
+            "reference": {
+              "type": ["string", "null"],
+              "description": "If set, this is the reference into the trigger scope that is the value of this parameter"
+            }
+          },
+          "required": ["label"]
         }
       },
-      "time_extracted": {
-        "type": ["string"],
-        "format": "date-time"
-      }
+      "required": ["attributes", "expressions", "title", "description"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_extracted": {
+      "type": ["string"],
+      "format": "date-time"
     }
-  }
+  },
+  "additionalProperties": false,
+  "required": ["id", "name", "source_type", "created_at", "updated_at"]
+}

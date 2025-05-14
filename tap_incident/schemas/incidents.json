@@ -1,524 +1,252 @@
 {
-    "type": ["object"],
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "type": ["string"]
-      },
-      "name": {
-        "type": ["string"]
-      },
-      "call_url": {
-        "type": ["string", "null"]
-      },
-      "created_at": {
-        "type": ["string"],
-        "format": "date-time"
-      },
-      "creator": {
-        "type": ["object"],
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "idempotency_key": {
+      "type": "string"
+    },
+    "incident_role_assignments": {
+      "type": "array",
+      "items": {
+        "type": "object",
         "properties": {
-          "api_key": {
-            "type": ["object", "null"],
+          "assignee": {
+            "type": "object",
             "properties": {
               "id": {
-                "type": ["string"]
+                "type": "string"
               },
               "name": {
-                "type": ["string"]
-              }
-            }
-          },
-          "user": {
-            "type": ["object", "null"],
-            "properties": {
+                "type": "string"
+              },
               "email": {
-                "type": ["null", "string"]
+                "type": "string"
               },
-              "id": {
-                "type": ["string"]
-              },
-              "name": {
-                "type": ["string"]
+              "role": {
+                "type": ["string", "null"]
               },
               "slack_user_id": {
-                "type": ["null", "string"]
+                "type": ["string", "null"]
               }
-            }
+            },
+            "required": ["id", "name", "email"]
+          },
+          "role_id": {
+            "type": "string"
+          },
+          "role_name": {
+            "type": "string"
           }
-        }
-      },
-      "custom_field_entries": {
-        "type": ["array"],
-        "items": {
-          "type": "object",
-          "properties": {
-            "custom_field": {
-              "type": ["object"],
-              "properties": {
-                "description": {
-                  "type": ["string"]
-                },
-                "field_type": {
-                  "type": ["string"]
-                },
-                "id": {
-                  "type": ["string"]
-                },
-                "name": {
-                  "type": ["string"]
-                },
-                "options": {
-                  "type": ["array"],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "custom_field_id": {
-                        "type": ["string"]
-                      },
-                      "id": {
-                        "type": ["string"]
-                      },
-                      "sort_key": {
-                        "type": ["integer"]
-                      },
-                      "value": {
-                        "type": ["string"]
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "values": {
-              "type": ["array"],
-              "items": {
-                "type": "object",
-                "properties": {
-                  "value_catalog_entry": {
-                    "type": ["object", "null"],
-                    "properties": {
-                      "aliases": {
-                        "type": ["array", "null"],
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "external_id": {
-                        "type": ["string", "null"]
-                      },
-                      "id": {
-                        "type": ["string"]
-                      },
-                      "name": {
-                        "type": ["string"]
-                      }
-                    }
-                  },
-                  "value_link": {
-                    "type": ["null", "string"]
-                  },
-                  "value_numeric": {
-                    "type": ["null", "number"]
-                  },
-                  "value_option": {
-                    "type": ["object", "null"],
-                    "properties": {
-                      "custom_field_id": {
-                        "type": ["string"]
-                      },
-                      "id": {
-                        "type": ["string"]
-                      },
-                      "sort_key": {
-                        "type": ["integer"]
-                      },
-                      "value": {
-                        "type": ["string"]
-                      }
-                    }
-                  },
-                  "value_text": {
-                    "type": ["null", "string"]
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "external_issue_reference": {
-        "type": ["object", "null"],
-        "properties": {
-          "issue_name": {
-            "type": ["string"]
-          },
-          "issue_permalink": {
-            "type": ["string"]
-          },
-          "provider": {
-            "type": ["string"]
-          }
-        }
-      },
-      "attachments": {
-        "type": ["array", "null"],
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": ["string"]
-            },
-            "incident_id": {
-              "type": ["string"]
-            },
-            "resource": {
-              "type": ["object"],
-              "properties": {
-                "external_id": {
-                  "type": ["string"]
-                },
-                "permalink": {
-                  "type": ["string"]
-                },
-                "resource_type": {
-                  "type": ["string"]
-                },
-                "title": {
-                  "type": ["string"]
-                }
-              }
-            }
-          }
-        }
-      },
-      "incident_role_assignments": {
-        "type": ["array"],
-        "items": {
-          "type": "object",
-          "properties": {
-            "assignee": {
-              "type": ["object", "null"],
-              "properties": {
-                "email": {
-                  "type": ["null", "string"]
-                },
-                "id": {
-                  "type": ["string"]
-                },
-                "name": {
-                  "type": ["string"]
-                },
-                "slack_user_id": {
-                  "type": ["null", "string"]
-                }
-              }
-            },
-            "role": {
-              "type": ["object"],
-              "properties": {
-                "created_at": {
-                  "type": ["string"],
-                  "format": "date-time"
-                },
-                "description": {
-                  "type": ["string"]
-                },
-                "id": {
-                  "type": ["string"]
-                },
-                "instructions": {
-                  "type": ["string"]
-                },
-                "name": {
-                  "type": ["string"]
-                },
-                "required": {
-                  "type": ["boolean"]
-                },
-                "role_type": {
-                  "type": ["string"]
-                },
-                "shortform": {
-                  "type": ["string"]
-                },
-                "updated_at": {
-                  "type": ["string"],
-                  "format": "date-time"
-                }
-              }
-            }
-          }
-        }
-      },
-      "incident_status": {
-        "type": ["object"],
-        "properties": {
-          "category": {
-            "type": ["string"]
-          },
-          "created_at": {
-            "type": ["string"],
-            "format": "date-time"
-          },
-          "description": {
-            "type": ["string"]
-          },
-          "id": {
-            "type": ["string"]
-          },
-          "name": {
-            "type": ["string"]
-          },
-          "rank": {
-            "type": ["integer"]
-          },
-          "updated_at": {
-            "type": ["string"],
-            "format": "date-time"
-          }
-        }
-      },
-      "incident_timestamp_values": {
-        "type": ["array", "null"],
-        "items": {
-          "type": "object",
-          "properties": {
-            "incident_timestamp": {
-              "type": ["object"],
-              "properties": {
-                "id": {
-                  "type": ["string"]
-                },
-                "name": {
-                  "type": ["string"]
-                },
-                "rank": {
-                  "type": ["integer"]
-                }
-              }
-            },
-            "value": {
-              "type": ["object", "null"],
-              "properties": {
-                "value": {
-                  "type": ["string", "null"],
-                  "format": "date-time"
-                }
-              }
-            }
-          }
-        }
-      },
-      "incident_type": {
-        "type": ["object", "null"],
-        "properties": {
-          "create_in_triage": {
-            "type": ["string"]
-          },
-          "created_at": {
-            "type": ["string"],
-            "format": "date-time"
-          },
-          "description": {
-            "type": ["string"]
-          },
-          "id": {
-            "type": ["string"]
-          },
-          "is_default": {
-            "type": ["boolean"]
-          },
-          "name": {
-            "type": ["string"]
-          },
-          "private_incidents_only": {
-            "type": ["boolean"]
-          },
-          "updated_at": {
-            "type": ["string"],
-            "format": "date-time"
-          }
-        }
-      },
-      "mode": {
-        "type": ["string"]
-      },
-      "permalink": {
-        "type": ["string", "null"]
-      },
-      "postmortem_document_url": {
-        "type": ["string", "null"]
-      },
-      "reference": {
-        "type": ["string"]
-      },
-      "severity": {
-        "type": ["object", "null"],
-        "properties": {
-          "created_at": {
-            "type": ["string"],
-            "format": "date-time"
-          },
-          "description": {
-            "type": ["string"]
-          },
-          "id": {
-            "type": ["string"]
-          },
-          "name": {
-            "type": ["string"]
-          },
-          "rank": {
-            "type": ["integer"]
-          },
-          "updated_at": {
-            "type": ["string"],
-            "format": "date-time"
-          }
-        }
-      },
-      "slack_channel_id": {
-        "type": ["string"]
-      },
-      "slack_channel_name": {
-        "type": ["string", "null"]
-      },
-      "slack_team_id": {
-        "type": ["string"]
-      },
-      "summary": {
-        "type": ["string", "null"]
-      },
-      "updated_at": {
-        "type": ["string"],
-        "format": "date-time"
-      },
-      "updates": {
-        "type": ["array", "null"],
-        "items": {
-          "type": "object",
-          "properties": {
-            "created_at": {
-              "type": ["string"],
-              "format": "date-time"
-            },
-            "id": {
-              "type": ["string"]
-            },
-            "incident_id": {
-              "type": ["string"]
-            },
-            "message": {
-              "type": ["string", "null"]
-            },
-            "new_incident_status": {
-              "type": ["object"],
-              "properties": {
-                "category": {
-                  "type": ["string"]
-                },
-                "created_at": {
-                  "type": ["string"],
-                  "format": "date-time"
-                },
-                "description": {
-                  "type": ["string"]
-                },
-                "id": {
-                  "type": ["string"]
-                },
-                "name": {
-                  "type": ["string"]
-                },
-                "rank": {
-                  "type": ["integer"]
-                },
-                "updated_at": {
-                  "type": ["string"],
-                  "format": "date-time"
-                }
-              }
-            },
-            "new_severity": {
-              "type": ["object", "null"],
-              "properties": {
-                "created_at": {
-                  "type": ["string"],
-                  "format": "date-time"
-                },
-                "description": {
-                  "type": ["string"]
-                },
-                "id": {
-                  "type": ["string"]
-                },
-                "name": {
-                  "type": ["string"]
-                },
-                "rank": {
-                  "type": ["integer"]
-                },
-                "updated_at": {
-                  "type": ["string"],
-                  "format": "date-time"
-                }
-              }
-            },
-            "updater": {
-              "type": ["object"],
-              "properties": {
-                "api_key": {
-                  "type": ["object", "null"],
-                  "properties": {
-                    "id": {
-                      "type": ["string"]
-                    },
-                    "name": {
-                      "type": ["string"]
-                    }
-                  }
-                },
-                "user": {
-                  "type": ["object", "null"],
-                  "properties": {
-                    "email": {
-                      "type": ["null", "string"]
-                    },
-                    "id": {
-                      "type": ["string"]
-                    },
-                    "name": {
-                      "type": ["string"]
-                    },
-                    "slack_user_id": {
-                      "type": ["null", "string"]
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "visibility": {
-        "type": ["string"]
-      },
-      "workload_minutes_late": {
-        "type": ["number", "null"]
-      },
-      "workload_minutes_sleeping": {
-        "type": ["number", "null"]
-      },
-      "workload_minutes_total": {
-        "type": ["number", "null"]
-      },
-      "workload_minutes_working": {
-        "type": ["number", "null"]
-      },
-      "time_extracted": {
-        "type": ["string"],
-        "format": "date-time"
+        },
+        "required": ["assignee", "role_id", "role_name"]
       }
+    },
+    "incident_status": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "name", "description", "created_at", "updated_at"]
+    },
+    "incident_type": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "name", "description", "created_at", "updated_at"]
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["standard", "retrospective", "test"]
+    },
+    "severity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "rank": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "name", "description", "rank"]
+    },
+    "service_associations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "service_id": {
+            "type": "string"
+          },
+          "service_name": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "service_id", "service_name"]
+      }
+    },
+    "custom_field_values": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": ["string", "null"]
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "sort_key": {
+                  "type": "integer"
+                }
+              },
+              "required": ["id", "value", "sort_key"]
+            }
+          }
+        },
+        "required": ["id", "name"]
+      }
+    },
+    "visibility": {
+      "type": "string",
+      "enum": ["public", "private"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "timestamps": {
+      "type": ["object", "null"],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "detected_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "resolved_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "closed_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      },
+      "required": ["created_at"]
+    },
+    "external_issue_reference": {
+      "type": ["object", "null"],
+      "properties": {
+        "issue_name": {
+          "type": "string"
+        },
+        "provider_name": {
+          "type": "string"
+        },
+        "provider_type": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": ["issue_name", "provider_name", "provider_type", "url"]
+    },
+    "summary": {
+      "type": ["string", "null"]
+    },
+    "time_extracted": {
+      "type": ["string"],
+      "format": "date-time"
     }
-  }
+  },
+  "additionalProperties": false,
+  "required": [
+    "id", 
+    "name", 
+    "idempotency_key", 
+    "incident_status", 
+    "incident_type", 
+    "mode", 
+    "visibility", 
+    "created_at", 
+    "updated_at"
+  ]
+}

@@ -1,39 +1,35 @@
 {
-    "type": ["object"],
-    "additionalProperties": false,
-    "properties": {
-      "created_at": {
-        "type": ["string"],
-        "format": "date-time"
-      },
-      "description": {
-        "type": ["string"]
-      },
-      "id": {
-        "type": ["string"]
-      },
-      "instructions": {
-        "type": ["string"]
-      },
-      "name": {
-        "type": ["string"]
-      },
-      "required": {
-        "type": ["boolean"]
-      },
-      "role_type": {
-        "type": ["string"]
-      },
-      "shortform": {
-        "type": ["string"]
-      },
-      "updated_at": {
-        "type": ["string"],
-        "format": "date-time"
-      },
-      "time_extracted": {
-        "type": ["string"],
-        "format": "date-time"
-      }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": ["string", "null"]
+    },
+    "instructions": {
+      "type": ["string", "null"]
+    },
+    "required": {
+      "type": "boolean"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_extracted": {
+      "type": ["string"],
+      "format": "date-time"
     }
-  }
+  },
+  "additionalProperties": false,
+  "required": ["id", "name", "required", "created_at", "updated_at"]
+}

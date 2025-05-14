@@ -1,19 +1,100 @@
 {
-    "type": ["object"],
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "type": ["string"]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "incident_id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updater": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": ["string", "null"]
+        },
+        "slack_user_id": {
+          "type": ["string", "null"]
+        }
       },
-      "name": {
-        "type": ["string"]
+      "required": ["id", "name", "email"]
+    },
+    "update_text": {
+      "type": "string"
+    },
+    "new_status": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "rank": {
+          "type": "integer"
+        }
       },
-      "rank": {
-        "type": ["integer"]
+      "required": ["id", "name", "description", "rank"]
+    },
+    "new_severity": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "rank": {
+          "type": "integer"
+        }
+      },
+      "required": ["id", "name", "description", "rank"]
+    },
+    "external_issue_reference": {
+      "type": ["object", "null"],
+      "properties": {
+        "issue_name": {
+          "type": "string"
+        },
+        "provider_name": {
+          "type": "string"
+        },
+        "provider_type": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
       },
       "time_extracted": {
         "type": ["string"],
         "format": "date-time"
-      }
+      },
+      "required": ["issue_name", "provider_name", "provider_type", "url", "time_extracted"]
     }
-  }
+  },
+  "additionalProperties": false,
+  "required": ["id", "incident_id", "created_at", "updater", "update_text"]
+}

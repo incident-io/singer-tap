@@ -1,24 +1,53 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "id": {
-      "type": "string",
-      "description": "Unique ID of this incident timestamp"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "name": {
-      "type": "string",
-      "description": "Unique name of this timestamp"
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "rank": {
-      "type": "integer",
-      "description": "Order in which this timestamp should be shown"
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
     },
     "time_extracted": {
       "type": ["string"],
       "format": "date-time"
     }
-  },
-  "additionalProperties": false,
-  "required": ["id", "name", "rank"]
+  }
 }

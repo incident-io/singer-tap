@@ -1,63 +1,53 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
     "id": {
-      "type": "string"
-    },
-    "name": {
-      "type": "string"
-    },
-    "description": {
-      "type": ["string", "null"]
-    },
-    "field_type": {
-      "type": "string",
-      "enum": [
-        "single_select",
-        "multi_select",
-        "text",
-        "link",
-        "number",
-        "datetime",
-        "incident"
+      "type": [
+        "string",
+        "null"
       ]
     },
-    "required": {
-      "type": "boolean"
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
-    "show_before_creation": {
-      "type": "boolean"
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
-    "show_before_closure": {
-      "type": "boolean"
+    "field_type": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
-    "show_in_announcement_post": {
-      "type": "boolean"
+    "catalog_type_id": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "created_at": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
     },
     "updated_at": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
     },
     "time_extracted": {
       "type": ["string"],
       "format": "date-time"
     }
-  },
-  "additionalProperties": false,
-  "required": [
-    "id", 
-    "name", 
-    "field_type", 
-    "required", 
-    "show_before_creation", 
-    "show_before_closure", 
-    "show_in_announcement_post", 
-    "created_at", 
-    "updated_at"
-  ]
+  }
 }

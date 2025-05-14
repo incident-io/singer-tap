@@ -1,22 +1,85 @@
 {
-    "type": ["object"],
-    "additionalProperties": false,
-    "properties": {
-      "email": {
-        "type": ["null", "string"]
-      },
-      "id": {
-        "type": ["string"]
-      },
-      "name": {
-        "type": ["string"]
-      },
-      "slack_user_id": {
-        "type": ["null", "string"]
-      },
-      "time_extracted": {
-        "type": ["string"],
-        "format": "date-time"
+  "type": "object",
+  "properties": {
+    "base_role": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "slug": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
+    },
+    "custom_roles": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": [
+          "object",
+          "string",
+          "null"
+        ]
+      }
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "email"
+    },
+    "slack_user_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "role": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "time_extracted": {
+      "type": ["string"],
+      "format": "date-time"
     }
   }
+}

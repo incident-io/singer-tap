@@ -1,36 +1,53 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "id": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "name": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "description": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "rank": {
-      "type": "integer"
-    },
-    "category": {
-      "type": "string",
-      "enum": ["triage", "investigating", "resolving", "closed"]
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "created_at": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
     },
     "updated_at": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
     },
     "time_extracted": {
       "type": ["string"],
       "format": "date-time"
     }
-  },
-  "additionalProperties": false,
-  "required": ["id", "name", "description", "rank", "created_at", "updated_at"]
+  }
 }

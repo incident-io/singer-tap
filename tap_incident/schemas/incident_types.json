@@ -1,32 +1,59 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
     "id": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "name": {
-      "type": "string"
-    },
-    "description": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "is_default": {
-      "type": "boolean"
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "private_incidents_only": {
+      "type": [
+        "boolean",
+        "null"
+      ]
     },
     "created_at": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
     },
     "updated_at": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
+    },
+    "create_in_triage": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "time_extracted": {
       "type": ["string"],
       "format": "date-time"
     }
-  },
-  "additionalProperties": false,
-  "required": ["id", "name", "description", "created_at", "updated_at"]
+  }
 }

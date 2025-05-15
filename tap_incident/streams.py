@@ -117,7 +117,7 @@ class ActionsStream(Stream):
     valid_replication_keys = ["updated_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "updated_at" 
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
@@ -166,7 +166,7 @@ class AlertsStream(Stream):
     valid_replication_keys = ["created_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "created_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
@@ -239,7 +239,7 @@ class CustomFieldsStream(Stream):
     valid_replication_keys = ["updated_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
@@ -308,7 +308,7 @@ class FollowUpsStream(Stream):
     valid_replication_keys = ["updated_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
@@ -357,7 +357,7 @@ class IncidentRolesStream(Stream):
     valid_replication_keys = ["updated_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
@@ -406,7 +406,7 @@ class IncidentStatusesStream(Stream):
     valid_replication_keys = ["updated_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
@@ -467,7 +467,7 @@ class IncidentTypesStream(Stream):
     valid_replication_keys = ["updated_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
@@ -516,7 +516,7 @@ class IncidentUpdatesStream(Stream):
     valid_replication_keys = ["created_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "created_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
@@ -565,7 +565,7 @@ class IncidentsStream(Stream):
     valid_replication_keys = ["updated_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
@@ -623,7 +623,7 @@ class SeveritiesStream(Stream):
     valid_replication_keys = ["updated_at"]
     
     def __init__(self, replication_method=None, replication_key=None):
-        self.replication_method = replication_method or "FULL_TABLE"
+        self.replication_method = replication_method or "INCREMENTAL"
         self.replication_key = replication_key or "updated_at"
     
     def sync(self, client: IncidentClient, state: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:

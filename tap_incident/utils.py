@@ -12,5 +12,4 @@ def safe_fromisoformat(date_str) -> datetime:
         zulu_date_with_zeroed_ms = head + ".000000+00:00" # ensure UTC with 6 decimal places
         return datetime.fromisoformat(zulu_date_with_zeroed_ms)
     else:
-        date_str = date_str.replace('Z', '+00:00')
         return datetime.fromisoformat(date_str)

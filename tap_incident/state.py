@@ -7,6 +7,7 @@ import logging
 import singer
 from typing import Dict, Any, Optional
 from tap_incident.utils import safe_fromisoformat
+
 LOGGER = logging.getLogger(__name__)
 
 

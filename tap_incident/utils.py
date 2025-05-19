@@ -7,7 +7,6 @@ def safe_fromisoformat(date_str) -> datetime:
     Convert 2025-05-07T17:30:55.97Z -> 2025-05-07T17:30:55.000000+00:00
     (incident.io can return dates with the wrong number of decimal places for fromisoformat below python 3.11)
     """
-    date_str = date_str.replace('Z', '+00:00')
     if "." in date_str:
         head, _ = date_str.split(".", 1)
         zulu_date_with_zeroed_ms = head + ".000000+00:00" # ensure UTC with 6 decimal places

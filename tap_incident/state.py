@@ -6,7 +6,7 @@ import json
 import logging
 import singer
 from typing import Dict, Any, Optional
-
+from tap_incident.utils import safe_fromisoformat
 LOGGER = logging.getLogger(__name__)
 
 
@@ -85,7 +85,7 @@ def get_bookmark_date(state: Dict[str, Any], stream_name: str, bookmark_key: str
     bookmark = get_bookmark(state, stream_name, bookmark_key)
     if bookmark:
         try:
-            return datetime.datetime.fromisoformat(bookmark.replace("Z", "+00:00"))
+            return safe_fromisoformat(bookmark.replace("Z", "+00:00"))
         except (ValueError, TypeError):
             LOGGER.warning(f"Invalid bookmark date for {stream_name}.{bookmark_key}: {bookmark}")
     

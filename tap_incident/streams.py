@@ -7,6 +7,7 @@ from typing import Dict, Any, List, Iterator, Optional, Set
 
 from tap_incident.client import IncidentClient
 from tap_incident.state import get_bookmark_date, update_bookmark, write_state
+from tap_incident.utils import safe_fromisoformat
 
 LOGGER = logging.getLogger(__name__)
 
@@ -62,7 +63,7 @@ class Stream(ABC):
             return state
             
         current_bookmark = self.get_starting_time(state)
-        record_time = datetime.fromisoformat(record[self.replication_key].replace("Z", "+00:00"))
+        record_time = safe_fromisoformat(record[self.replication_key].replace("Z", "+00:00"))
         
         if current_bookmark is None or record_time > current_bookmark:
             return update_bookmark(state, self.name, self.replication_key, record[self.replication_key])
@@ -94,7 +95,7 @@ class Stream(ABC):
                 continue
                 
             try:
-                record_time = datetime.fromisoformat(record[self.replication_key].replace("Z", "+00:00"))
+                record_time = safe_fromisoformat(record[self.replication_key].replace("Z", "+00:00"))
                 if latest_time is None or record_time > latest_time:
                     latest_time = record_time
                     latest_record = record
@@ -134,7 +135,7 @@ class ActionsStream(Stream):
             
             # If we're doing incremental and have a bookmark date, filter records
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(action[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(action[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
@@ -183,7 +184,7 @@ class AlertsStream(Stream):
             
             # Filter by bookmark date for incremental replication
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(alert[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(alert[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
@@ -256,7 +257,7 @@ class CustomFieldsStream(Stream):
             
             # Filter by bookmark date for incremental replication
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(custom_field[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(custom_field[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
@@ -325,7 +326,7 @@ class FollowUpsStream(Stream):
             
             # Filter by bookmark date for incremental replication
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(follow_up[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(follow_up[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
@@ -374,7 +375,7 @@ class IncidentRolesStream(Stream):
             
             # Filter by bookmark date for incremental replication
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(role[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(role[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
@@ -423,7 +424,7 @@ class IncidentStatusesStream(Stream):
             
             # Filter by bookmark date for incremental replication
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(status[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(status[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
@@ -484,7 +485,7 @@ class IncidentTypesStream(Stream):
             
             # Filter by bookmark date for incremental replication
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(incident_type[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(incident_type[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
@@ -533,7 +534,7 @@ class IncidentUpdatesStream(Stream):
             
             # Filter by bookmark date for incremental replication
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(update[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(update[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
@@ -582,7 +583,7 @@ class IncidentsStream(Stream):
             
             # Filter by bookmark date for incremental replication
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(incident[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(incident[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             
@@ -640,7 +641,7 @@ class SeveritiesStream(Stream):
             
             # Filter by bookmark date for incremental replication
             if self.replication_method == "INCREMENTAL" and starting_date and self.replication_key:
-                record_date = datetime.fromisoformat(severity[self.replication_key].replace("Z", "+00:00"))
+                record_date = safe_fromisoformat(severity[self.replication_key].replace("Z", "+00:00"))
                 if record_date <= starting_date:
                     continue
             

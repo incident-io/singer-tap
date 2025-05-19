@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "properties": {
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "rank": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "time_extracted": {
+      "type": ["string"],
+      "format": "date-time"
+    }
+  }
+}

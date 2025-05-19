@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "incident_id": {
+      "type": "string"
+    },
+    "assignee": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": ["string", "null"]
+        },
+        "slack_user_id": {
+          "type": ["string", "null"]
+        }
+      },
+      "required": ["id", "name", "email"]
+    },
+    "creator": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": ["string", "null"]
+        },
+        "slack_user_id": {
+          "type": ["string", "null"]
+        }
+      },
+      "required": ["id", "name", "email"]
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "completed", "canceled"]
+    },
+    "external_issue_reference": {
+      "type": ["object", "null"],
+      "properties": {
+        "issue_name": {
+          "type": "string"
+        },
+        "provider_name": {
+          "type": "string"
+        },
+        "provider_type": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": ["issue_name", "provider_name", "provider_type", "url"]
+    },
+    "completed_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "deadline": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_extracted": {
+      "type": ["string"],
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["id", "incident_id", "creator", "description", "status", "created_at", "updated_at"]
+}

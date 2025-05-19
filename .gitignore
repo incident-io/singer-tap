@@ -4,3 +4,5 @@ data/
 __debug_bin
 .idea/
 tmp/
+config.json
+catalog.json

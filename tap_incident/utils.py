@@ -5,7 +5,8 @@ def safe_fromisoformat(date_str) -> datetime:
     Convert a date string to a datetime object.
     
     Convert 2025-05-07T17:30:55.97Z -> 2025-05-07T17:30:55.000000+00:00
-    (incident.io can return dates with the wrong number of decimal places for fromisoformat below python 3.11)
+    Incident.io can return dates with the wrong number of decimal places for fromisoformat. 
+    Below python 3.11 this will fail as an argument to datetime.fromisoformat()
     """
     if "." in date_str:
         head, _ = date_str.split(".", 1)

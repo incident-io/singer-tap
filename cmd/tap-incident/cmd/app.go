@@ -151,27 +151,52 @@ func loadConfigOrError(ctx context.Context, configFile string) (cfg *config.Conf
 			return
 		}
 		if configFile == "" {
-			OUT("No config file (--config) was provided, but is required.\n")
+			OUT("No config file (--config) was provided.\n")
 		} else {
 			OUT("Failed to load config file!\n")
 		}
 
-		OUT(`We expect a config file in JSON format that looks like:
-{
-  "api_key": "<your-api-key>",
-}
+		OUT(`You can provide configuration via:
+
+1. Environment variables:
+   export INCIDENT_API_KEY="<your-api-key>"
+   export INCIDENT_ENDPOINT="https://api.incident.io" (optional)
+
+2. Config file in JSON format:
+   {
+     "api_key": "<your-api-key>",
+     "endpoint": "<api-endpoint>" (optional)
+   }
 `)
 	}()
 
-	if configFile == "" {
-		return nil, errors.New("No config file set! (--config)")
+	// Try to load from environment variables first
+	cfg = &config.Config{
+		APIKey:   os.Getenv("INCIDENT_API_KEY"),
+		Endpoint: os.Getenv("INCIDENT_ENDPOINT"),
 	}
 
-	cfg, err = config.LoadAndParse(configFile, config.Config{})
-	if err != nil {
-		return nil, errors.Wrap(err, "loading config")
+	// If a config file is provided, load it and merge with env vars
+	if configFile != "" {
+		fileCfg, err := config.LoadAndParse(configFile, config.Config{})
+		if err != nil {
+			return nil, errors.Wrap(err, "loading config")
+		}
+		
+		// File config takes precedence over env vars
+		if fileCfg.APIKey != "" {
+			cfg.APIKey = fileCfg.APIKey
+		}
+		if fileCfg.Endpoint != "" {
+			cfg.Endpoint = fileCfg.Endpoint
+		}
 	}
+
+	// Validate the final config
 	if err := cfg.Validate(); err != nil {
+		if configFile == "" && cfg.APIKey == "" {
+			return nil, errors.New("No API key provided. Set INCIDENT_API_KEY environment variable or use --config flag")
+		}
 		data, _ := json.MarshalIndent(err, "", "  ")
 
 		// Print the validation error in JSON. Needs improving.

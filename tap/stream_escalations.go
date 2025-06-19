@@ -7,6 +7,7 @@ import (
 	"github.com/incident-io/singer-tap/client"
 	"github.com/incident-io/singer-tap/model"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 func init() {
@@ -38,7 +39,7 @@ func (s *StreamEscalations) GetRecords(ctx context.Context, logger kitlog.Logger
 
 	for {
 		params := &client.EscalationsV2ListParams{
-			PageSize: Ptr(int64(50)), // Max page size
+			PageSize: lo.ToPtr(int64(50)), // Max page size
 			After:    after,
 		}
 
@@ -64,9 +65,4 @@ func (s *StreamEscalations) GetRecords(ctx context.Context, logger kitlog.Logger
 	}
 
 	return results, nil
-}
-
-// Ptr is a helper function to return a pointer to a value
-func Ptr[T any](v T) *T {
-	return &v
 }

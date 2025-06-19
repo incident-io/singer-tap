@@ -38,7 +38,7 @@ Whenever you need to update the snapshots, run:
 
 ```console
 $ export TEST_INCIDENT_API_KEY="<test-key>"
-$ export TAP_SNAPSHOT_UPDATE='true' ginkgo -tags=integration -r ./integration
+$ TAP_SNAPSHOT_UPDATE='true' ginkgo -tags=integration -r ./integration
 Writing snapshot file testdata/sync/follow_ups.json
 ...
 ```

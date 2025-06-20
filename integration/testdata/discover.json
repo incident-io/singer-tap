@@ -866,6 +866,390 @@
         {
           "breadcrumb": [
             "properties",
+            "created_at"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "creator"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "escalation_path_id"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "events"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "id"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "priority"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "related_alerts"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "related_incidents"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "status"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
+            "title"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        }
+      ],
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": [
+              "string"
+            ]
+          },
+          "creator": {
+            "properties": {
+              "alert": {
+                "properties": {
+                  "id": {
+                    "type": [
+                      "string"
+                    ]
+                  },
+                  "title": {
+                    "type": [
+                      "string"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "user": {
+                "properties": {
+                  "email": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "id": {
+                    "type": [
+                      "string"
+                    ]
+                  },
+                  "name": {
+                    "type": [
+                      "string"
+                    ]
+                  },
+                  "slack_user_id": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "workflow": {
+                "properties": {
+                  "id": {
+                    "type": [
+                      "string"
+                    ]
+                  },
+                  "name": {
+                    "type": [
+                      "string"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "type": [
+              "object"
+            ]
+          },
+          "escalation_path_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "events": {
+            "items": {
+              "properties": {
+                "channels": {
+                  "items": {
+                    "properties": {
+                      "microsoft_teams_channel_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "microsoft_teams_team_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "slack_channel_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "slack_team_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
+                },
+                "event": {
+                  "type": [
+                    "string"
+                  ]
+                },
+                "id": {
+                  "type": [
+                    "string"
+                  ]
+                },
+                "occurred_at": {
+                  "format": "date-time",
+                  "type": [
+                    "string"
+                  ]
+                },
+                "urgency": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "users": {
+                  "items": {
+                    "properties": {
+                      "email": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      },
+                      "id": {
+                        "type": [
+                          "string"
+                        ]
+                      },
+                      "name": {
+                        "type": [
+                          "string"
+                        ]
+                      },
+                      "slack_user_id": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            "type": [
+              "array"
+            ]
+          },
+          "id": {
+            "type": [
+              "string"
+            ]
+          },
+          "priority": {
+            "properties": {
+              "name": {
+                "type": [
+                  "string"
+                ]
+              }
+            },
+            "type": [
+              "object"
+            ]
+          },
+          "related_alerts": {
+            "items": {
+              "properties": {
+                "id": {
+                  "type": [
+                    "string"
+                  ]
+                },
+                "title": {
+                  "type": [
+                    "string"
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            "type": [
+              "array"
+            ]
+          },
+          "related_incidents": {
+            "items": {
+              "properties": {
+                "external_id": {
+                  "type": [
+                    "integer"
+                  ]
+                },
+                "id": {
+                  "type": [
+                    "string"
+                  ]
+                },
+                "name": {
+                  "type": [
+                    "string"
+                  ]
+                },
+                "reference": {
+                  "type": [
+                    "string"
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            "type": [
+              "array"
+            ]
+          },
+          "status": {
+            "type": [
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "string"
+            ]
+          }
+        },
+        "type": [
+          "object"
+        ]
+      },
+      "stream": "escalations",
+      "tap_stream_id": "escalations"
+    },
+    {
+      "metadata": [
+        {
+          "breadcrumb": [],
+          "metadata": {
+            "forced-replication-method": "FULL_TABLE",
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
             "assignee"
           ],
           "metadata": {

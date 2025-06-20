@@ -193,3 +193,11 @@ You can adjust which columns within a stream you wish to export similarly, by ad
 - Primary key column(s): id, custom_field_id
 - Replication: full table
 - API documentation: [Users V2](https://api-docs.incident.io/tag/Users-V2)
+
+### Escalations
+
+- Table name: escalations
+- Description: Escalations track the lifecycle of pages sent through escalation paths or directly to users, including who was notified, when they acknowledged, and the current status.
+- Primary key column(s): id
+- Replication: full table
+- API documentation: [Escalations V2](https://api-docs.incident.io/tag/Escalations-V2)

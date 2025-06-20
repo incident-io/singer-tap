@@ -54,11 +54,11 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PUBLISHER_KEY }}
       -
         name: Run GoReleaser
-        continue-on-error: true
+        continue-on-error: false
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
-          version: latest
+          version: v1.26.2
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

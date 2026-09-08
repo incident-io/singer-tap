@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type userV1 struct{}
 
@@ -26,7 +26,7 @@ func (userV1) Schema() Property {
 	}
 }
 
-func (userV1) Serialize(input client.UserV1) map[string]any {
+func (userV1) Serialize(input incident.UserV1) map[string]any {
 	// Deprecated role field needs removing - so build manually and omit it
 	return map[string]any{
 		"id":            input.Id,

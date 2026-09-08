@@ -6,25 +6,23 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/deepmap/oapi-codegen/pkg/securityprovider"
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/go-retryablehttp"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/pkg/errors"
 )
 
-func New(ctx context.Context, apiKey, apiEndpoint, version string, opts ...ClientOption) (*ClientWithResponses, error) {
-	bearerTokenProvider, bearerTokenProviderErr := securityprovider.NewSecurityProviderBearerToken(apiKey)
-	if bearerTokenProviderErr != nil {
-		return nil, bearerTokenProviderErr
-	}
-
+// New returns a client for the incident.io API that retries transient failures
+// and returns an error on any non-2xx response.
+func New(ctx context.Context, apiKey, apiEndpoint, version string, opts ...incident.ClientOption) (*incident.ClientWithResponses, error) {
 	retryClient := retryablehttp.NewClient()
 	retryClient.RetryMax = 3
+	retryClient.Logger = nil
 
 	base := retryClient.StandardClient()
 
-	// The generated client won't turn validation errors into actual errors, so we do this
-	// inside of a generic middleware.
+	// The SDK signals a failed request with a nil JSON200 rather than an error, and
+	// the streams dereference JSON200 directly, so turn it into an error here.
 	base.Transport = Wrap(cleanhttp.DefaultTransport(), func(req *http.Request, next http.RoundTripper) (*http.Response, error) {
 		resp, err := next.RoundTrip(req)
 		if err == nil && resp.StatusCode > 299 {
@@ -39,34 +37,19 @@ func New(ctx context.Context, apiKey, apiEndpoint, version string, opts ...Clien
 		return resp, err
 	})
 
-	clientOpts := append([]ClientOption{
-		WithHTTPClient(base),
-		WithRequestEditorFn(bearerTokenProvider.Intercept),
+	clientOpts := append([]incident.ClientOption{
+		incident.WithBaseURL(apiEndpoint),
+		incident.WithHTTPClient(base),
 		// Add a user-agent so we can tell which version these requests came from.
-		WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
-			req.Header.Add("user-agent", fmt.Sprintf("tap-incident/%s", version))
-			return nil
-		}),
+		incident.WithUserAgent(fmt.Sprintf("tap-incident/%s", version)),
 	}, opts...)
 
-	client, err := NewClientWithResponses(apiEndpoint, clientOpts...)
+	cl, err := incident.New(apiKey, clientOpts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "creating client")
 	}
 
-	return client, nil
-}
-
-// WithReadOnly restricts the client to GET requests only, useful when creating a client
-// for the purpose of dry-running.
-func WithReadOnly() ClientOption {
-	return WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
-		if req.Method != http.MethodGet {
-			return fmt.Errorf("read-only client tried to make mutating request: %s %s", req.Method, req.URL.String())
-		}
-
-		return nil
-	})
+	return cl, nil
 }
 
 // RoundTripperFunc wraps a function to implement the RoundTripper interface, allowing

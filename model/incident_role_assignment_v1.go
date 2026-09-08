@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type incidentRoleAssignmentV1 struct{}
 
@@ -16,7 +16,7 @@ func (incidentRoleAssignmentV1) Schema() Property {
 	}
 }
 
-func (incidentRoleAssignmentV1) Serialize(input client.IncidentRoleAssignmentV1) map[string]any {
+func (incidentRoleAssignmentV1) Serialize(input incident.IncidentRoleAssignmentV1) map[string]any {
 	var assignee map[string]any
 	if input.Assignee != nil {
 		assignee = UserV1.Serialize(*input.Assignee)

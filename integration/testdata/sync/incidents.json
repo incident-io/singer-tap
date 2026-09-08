@@ -284,7 +284,7 @@
     "slack_channel_id": "C0624NMCSQ7",
     "slack_channel_name": "inc-2023-10-24-teal-ostrich",
     "slack_team_id": "T062AQ2LWLE",
-    "summary": "This is an incident to make some incident data appear in our tests.",
+    "summary": null,
     "updated_at": "2023-10-24T15:10:36.217Z",
     "updates": [
       {

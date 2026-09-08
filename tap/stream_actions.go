@@ -4,7 +4,7 @@ import (
 	"context"
 
 	kitlog "github.com/go-kit/log"
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/incident-io/singer-tap/model"
 	"github.com/pkg/errors"
 )
@@ -23,26 +23,39 @@ func (s *StreamActions) Output() *Output {
 		Schema: &model.Schema{
 			HasAdditionalProperties: false,
 			Type:                    []string{"object"},
-			Properties:              model.ActionV2.Schema().Properties,
+			Properties:              model.ActionV3.Schema().Properties,
 		},
 		KeyProperties:      []string{"id"},
 		BookmarkProperties: []string{},
 	}
 }
 
-func (s *StreamActions) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
+func (s *StreamActions) GetRecords(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses) ([]map[string]any, error) {
 	var (
-		results = []map[string]any{}
+		after    *string
+		pageSize = int64(250)
+		results  = []map[string]any{}
 	)
 
-	response, err := cl.ActionsV2ListWithResponse(ctx, &client.ActionsV2ListParams{})
-	if err != nil {
-		return nil, errors.Wrap(err, "listing actions")
-	}
+	for {
+		logger.Log("msg", "loading actions page", "page_size", pageSize, "after", after)
+		page, err := cl.ActionsV3ListWithResponse(ctx, &incident.ActionsV3ListParams{
+			PageSize: &pageSize,
+			After:    after,
+		})
+		if err != nil {
+			return nil, errors.Wrap(err, "listing actions")
+		}
 
-	for _, element := range response.JSON200.Actions {
-		results = append(results, model.ActionV2.Serialize(element))
-	}
+		for _, element := range page.JSON200.Actions {
+			results = append(results, model.ActionV3.Serialize(element))
+		}
 
-	return results, nil
+		// The endpoint sets after only when the page was full, so no cursor means no more rows.
+		if page.JSON200.PaginationMeta.After == nil {
+			return results, nil
+		}
+
+		after = page.JSON200.PaginationMeta.After
+	}
 }

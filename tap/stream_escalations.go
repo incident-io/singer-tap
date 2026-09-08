@@ -4,7 +4,7 @@ import (
 	"context"
 
 	kitlog "github.com/go-kit/log"
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/incident-io/singer-tap/model"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -31,14 +31,14 @@ func (s *StreamEscalations) Output() *Output {
 	}
 }
 
-func (s *StreamEscalations) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
+func (s *StreamEscalations) GetRecords(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses) ([]map[string]any, error) {
 	var (
 		results = []map[string]any{}
 		after   *string
 	)
 
 	for {
-		params := &client.EscalationsV2ListParams{
+		params := &incident.EscalationsV2ListParams{
 			PageSize: lo.ToPtr(int64(50)), // Max page size
 			After:    after,
 		}

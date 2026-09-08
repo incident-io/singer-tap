@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/samber/lo"
 )
 
@@ -30,13 +30,13 @@ func (customFieldTypeInfoV1) Schema() Property {
 	}
 }
 
-func (customFieldTypeInfoV1) Serialize(input client.CustomFieldTypeInfoV1) map[string]any {
+func (customFieldTypeInfoV1) Serialize(input incident.CustomFieldTypeInfoV1) map[string]any {
 	return map[string]any{
 		"id":          input.Id,
 		"name":        input.Name,
 		"description": input.Description,
 		"field_type":  input.FieldType,
-		"options": lo.Map(input.Options, func(option client.CustomFieldOptionV1, _ int) map[string]any {
+		"options": lo.Map(input.Options, func(option incident.CustomFieldOptionV1, _ int) map[string]any {
 			return CustomFieldOptionV1.Serialize(&option)
 		}),
 	}

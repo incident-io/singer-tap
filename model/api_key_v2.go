@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type apiKeyV2 struct{}
 
@@ -20,6 +20,6 @@ func (apiKeyV2) Schema() Property {
 	}
 }
 
-func (apiKeyV2) Serialize(input client.APIKeyV2) map[string]any {
+func (apiKeyV2) Serialize(input incident.APIKeyActorV2) map[string]any {
 	return DumpToMap(input)
 }

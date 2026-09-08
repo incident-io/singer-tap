@@ -4,7 +4,7 @@ import (
 	"context"
 
 	kitlog "github.com/go-kit/log"
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/incident-io/singer-tap/model"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -31,7 +31,7 @@ func (s *StreamCustomFieldOptions) Output() *Output {
 	}
 }
 
-func (s *StreamCustomFieldOptions) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
+func (s *StreamCustomFieldOptions) GetRecords(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses) ([]map[string]any, error) {
 	var (
 		results = []map[string]any{}
 	)
@@ -59,17 +59,17 @@ func (s *StreamCustomFieldOptions) GetRecords(ctx context.Context, logger kitlog
 func (s *StreamCustomFieldOptions) GetOptions(
 	ctx context.Context,
 	logger kitlog.Logger,
-	cl *client.ClientWithResponses,
+	cl *incident.ClientWithResponses,
 	customFieldId string,
-) ([]client.CustomFieldOptionV1, error) {
+) ([]incident.CustomFieldOptionV1, error) {
 	var (
 		after    *string
 		pageSize = int64(250)
-		results  = []client.CustomFieldOptionV1{}
+		results  = []incident.CustomFieldOptionV1{}
 	)
 
 	for {
-		page, err := cl.CustomFieldOptionsV1ListWithResponse(ctx, &client.CustomFieldOptionsV1ListParams{
+		page, err := cl.CustomFieldOptionsV1ListWithResponse(ctx, &incident.CustomFieldOptionsV1ListParams{
 			CustomFieldId: customFieldId,
 			PageSize:      &pageSize,
 			After:         after,

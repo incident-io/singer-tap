@@ -4,7 +4,7 @@ import (
 	"context"
 
 	kitlog "github.com/go-kit/log"
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/incident-io/singer-tap/model"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -31,7 +31,7 @@ func (s *StreamIncidentUpdates) Output() *Output {
 	}
 }
 
-func (s *StreamIncidentUpdates) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
+func (s *StreamIncidentUpdates) GetRecords(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses) ([]map[string]any, error) {
 	var (
 		after    *string
 		pageSize int64 = 250
@@ -40,7 +40,7 @@ func (s *StreamIncidentUpdates) GetRecords(ctx context.Context, logger kitlog.Lo
 
 	for {
 		logger.Log("msg", "loading page", "page_size", pageSize, "after", after)
-		page, err := cl.IncidentUpdatesV2ListWithResponse(ctx, &client.IncidentUpdatesV2ListParams{
+		page, err := cl.IncidentUpdatesV2ListWithResponse(ctx, &incident.IncidentUpdatesV2ListParams{
 			PageSize: &pageSize,
 			After:    after,
 		})

@@ -1260,6 +1260,16 @@
         {
           "breadcrumb": [
             "properties",
+            "category"
+          ],
+          "metadata": {
+            "inclusion": "available",
+            "selected-by-default": true
+          }
+        },
+        {
+          "breadcrumb": [
+            "properties",
             "completed_at"
           ],
           "metadata": {
@@ -1383,6 +1393,35 @@
                 "type": [
                   "null",
                   "string"
+                ]
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "category": {
+            "properties": {
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "id": {
+                "type": [
+                  "string"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string"
+                ]
+              },
+              "rank": {
+                "type": [
+                  "integer"
                 ]
               }
             },

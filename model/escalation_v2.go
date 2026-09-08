@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type escalationV2 struct{}
 
@@ -32,7 +32,7 @@ func (escalationV2) Schema() Property {
 	}
 }
 
-func (escalationV2) Serialize(input client.EscalationV2) map[string]any {
+func (escalationV2) Serialize(input incident.EscalationV2) map[string]any {
 	relatedAlerts := make([]map[string]any, 0, len(input.RelatedAlerts))
 	for _, alert := range input.RelatedAlerts {
 		relatedAlerts = append(relatedAlerts, AlertSlimV2.Serialize(alert))

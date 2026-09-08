@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type actorV2 struct{}
 
@@ -16,7 +16,7 @@ func (actorV2) Schema() Property {
 	}
 }
 
-func (actorV2) Serialize(input client.ActorV2) map[string]any {
+func (actorV2) Serialize(input incident.ActorV2) map[string]any {
 	var user map[string]any
 	if input.User != nil {
 		user = UserV2.Serialize(*input.User)

@@ -2,11 +2,11 @@ package model
 
 import incident "github.com/incident-io/sdk-go"
 
-type actionV2 struct{}
+type actionV3 struct{}
 
-var ActionV2 actionV2
+var ActionV3 actionV3
 
-func (actionV2) Schema() Property {
+func (actionV3) Schema() Property {
 	return Property{
 		Types: []string{"object"},
 		Properties: map[string]Property{
@@ -30,7 +30,7 @@ func (actionV2) Schema() Property {
 	}
 }
 
-func (actionV2) Serialize(input incident.ActionV2) map[string]any {
+func (actionV3) Serialize(input incident.ActionV3) map[string]any {
 	var assignee map[string]any
 	if input.Assignee != nil {
 		assignee = UserV2.Serialize(*input.Assignee)

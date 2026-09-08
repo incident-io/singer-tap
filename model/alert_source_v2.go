@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 )
 
 type alertSourceV2 struct{}
@@ -41,7 +41,7 @@ func (alertSourceV2) Schema() Property {
 	}
 }
 
-func (alertSourceV2) Serialize(input client.AlertSourceV2) map[string]any {
+func (alertSourceV2) Serialize(input incident.AlertSourceV2) map[string]any {
 	result := map[string]any{
 		"id":          input.Id,
 		"name":        input.Name,

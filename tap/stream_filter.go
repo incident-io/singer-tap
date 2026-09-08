@@ -4,7 +4,7 @@ import (
 	"context"
 
 	kitlog "github.com/go-kit/log"
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/incident-io/singer-tap/model"
 )
 
@@ -22,7 +22,7 @@ func (s *Filter) Output() *Output {
 	return output
 }
 
-func (s *Filter) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
+func (s *Filter) GetRecords(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses) ([]map[string]any, error) {
 	records, err := s.Stream.GetRecords(ctx, logger, cl)
 	if err != nil {
 		return nil, err

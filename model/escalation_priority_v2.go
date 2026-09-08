@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type escalationPriorityV2 struct{}
 
@@ -17,7 +17,7 @@ func (escalationPriorityV2) Schema() Property {
 	}
 }
 
-func (escalationPriorityV2) Serialize(input client.EscalationPriorityV2) map[string]any {
+func (escalationPriorityV2) Serialize(input incident.EscalationPriorityV2) map[string]any {
 	return map[string]any{
 		"name": input.Name,
 	}

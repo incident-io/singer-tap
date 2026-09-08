@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type incidentRoleV2 struct{}
 
@@ -38,7 +38,7 @@ func (incidentRoleV2) Schema() Property {
 	}
 }
 
-func (incidentRoleV2) Serialize(input client.IncidentRoleV2) map[string]any {
+func (incidentRoleV2) Serialize(input incident.IncidentRoleV2) map[string]any {
 	// Just flat convert everything into a map[string]any
 	return DumpToMap(input)
 }
@@ -79,7 +79,7 @@ func (embeddedIncidentRoleV2) Schema() Property {
 	}
 }
 
-func (embeddedIncidentRoleV2) Serialize(input client.EmbeddedIncidentRoleV2) map[string]any {
+func (embeddedIncidentRoleV2) Serialize(input incident.EmbeddedIncidentRoleV2) map[string]any {
 	// Just flat convert everything into a map[string]any
 	return DumpToMap(input)
 }

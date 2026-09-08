@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type escalationCreatorV2 struct{}
 
@@ -17,7 +17,7 @@ func (escalationCreatorV2) Schema() Property {
 	}
 }
 
-func (escalationCreatorV2) Serialize(input client.EscalationCreatorV2) map[string]any {
+func (escalationCreatorV2) Serialize(input incident.EscalationCreatorV2) map[string]any {
 	result := make(map[string]any)
 
 	if input.User != nil {

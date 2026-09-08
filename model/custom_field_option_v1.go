@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type customFieldOptionV1 struct{}
 
@@ -26,7 +26,7 @@ func (customFieldOptionV1) Schema() Property {
 	}
 }
 
-func (customFieldOptionV1) Serialize(input *client.CustomFieldOptionV1) map[string]any {
+func (customFieldOptionV1) Serialize(input *incident.CustomFieldOptionV1) map[string]any {
 	if input == nil {
 		return nil
 	}

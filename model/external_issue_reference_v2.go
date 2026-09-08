@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type externalIssueReferenceV2 struct{}
 
@@ -23,7 +23,7 @@ func (externalIssueReferenceV2) Schema() Property {
 	}
 }
 
-func (externalIssueReferenceV2) Serialize(input *client.ExternalIssueReferenceV2) map[string]any {
+func (externalIssueReferenceV2) Serialize(input *incident.ExternalIssueReferenceV2) map[string]any {
 	if input == nil {
 		return nil
 	}

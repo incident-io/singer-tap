@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/samber/lo"
 )
 
@@ -78,20 +78,20 @@ func (incidentV2) Schema() Property {
 }
 
 func (incidentV2) Serialize(
-	input client.IncidentV2,
-	incidentAttachments []client.IncidentAttachmentV1,
-	incidentUpdates []client.IncidentUpdateV2,
+	input incident.IncidentV2,
+	incidentAttachments []incident.IncidentAttachmentV1,
+	incidentUpdates []incident.IncidentUpdateV2,
 ) map[string]any {
 	var attachments []map[string]any
 	if len(incidentAttachments) > 0 {
-		attachments = lo.Map(incidentAttachments, func(attachment client.IncidentAttachmentV1, _ int) map[string]any {
+		attachments = lo.Map(incidentAttachments, func(attachment incident.IncidentAttachmentV1, _ int) map[string]any {
 			return IncidentAttachmentV1.Serialize(attachment)
 		})
 	}
 
 	var updates []map[string]any
 	if len(incidentUpdates) > 0 {
-		updates = lo.Map(incidentUpdates, func(update client.IncidentUpdateV2, _ int) map[string]any {
+		updates = lo.Map(incidentUpdates, func(update incident.IncidentUpdateV2, _ int) map[string]any {
 			return IncidentUpdateV2.Serialize(update)
 		})
 	}
@@ -101,17 +101,17 @@ func (incidentV2) Serialize(
 		"name":     input.Name,
 		"call_url": input.CallUrl,
 		"creator":  ActorV2.Serialize(input.Creator),
-		"custom_field_entries": lo.Map(input.CustomFieldEntries, func(entry client.CustomFieldEntryV2, _ int) map[string]any {
+		"custom_field_entries": lo.Map(input.CustomFieldEntries, func(entry incident.CustomFieldEntryV2, _ int) map[string]any {
 			return CustomFieldEntryV2.Serialize(entry)
 		}),
 		"external_issue_reference": ExternalIssueReferenceV2.Serialize(input.ExternalIssueReference),
 		"attachments":              attachments,
 		"updates":                  updates,
-		"incident_role_assignments": lo.Map(input.IncidentRoleAssignments, func(assignment client.IncidentRoleAssignmentV2, _ int) map[string]any {
+		"incident_role_assignments": lo.Map(input.IncidentRoleAssignments, func(assignment incident.IncidentRoleAssignmentV2, _ int) map[string]any {
 			return IncidentRoleAssignmentV2.Serialize(assignment)
 		}),
 		"incident_status": IncidentStatusV2.Serialize(input.IncidentStatus),
-		"incident_timestamp_values": lo.Map(*input.IncidentTimestampValues, func(timestamp client.IncidentTimestampWithValueV2, _ int) map[string]any {
+		"incident_timestamp_values": lo.Map(*input.IncidentTimestampValues, func(timestamp incident.IncidentTimestampWithValueV2, _ int) map[string]any {
 			return IncidentTimestampWithValueV2.Serialize(timestamp)
 		}),
 		"incident_type":             IncidentTypeV2.Serialize(input.IncidentType),

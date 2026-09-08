@@ -2,11 +2,11 @@ package model
 
 import incident "github.com/incident-io/sdk-go"
 
-type followUpPriorityV2 struct{}
+type followUpCategoryV3 struct{}
 
-var FollowUpPriorityV2 followUpPriorityV2
+var FollowUpCategoryV3 followUpCategoryV3
 
-func (followUpPriorityV2) Schema() Property {
+func (followUpCategoryV3) Schema() Property {
 	return Property{
 		Types: []string{"object"},
 		Properties: map[string]Property{
@@ -26,7 +26,7 @@ func (followUpPriorityV2) Schema() Property {
 	}
 }
 
-func (followUpPriorityV2) Serialize(input *incident.FollowUpPriorityV2) map[string]any {
+func (followUpCategoryV3) Serialize(input *incident.FollowUpCategoryV3) map[string]any {
 	if input == nil {
 		return nil
 	}

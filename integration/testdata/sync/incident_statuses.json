@@ -20,7 +20,7 @@
   {
     "category": "canceled",
     "created_at": "2023-10-24T09:27:22.713Z",
-    "description": " ",
+    "description": "",
     "id": "01HDGG56RYC30NDNG8FP7R1E71",
     "name": "Canceled",
     "rank": -3,
@@ -47,7 +47,7 @@
   {
     "category": "triage",
     "created_at": "2023-10-24T09:27:22.693Z",
-    "description": " ",
+    "description": "",
     "id": "01HDGG56RYFK1BSZ4VSKF177VD",
     "name": "Triage",
     "rank": 0,
@@ -56,7 +56,7 @@
   {
     "category": "merged",
     "created_at": "2023-10-24T09:27:22.705Z",
-    "description": " ",
+    "description": "",
     "id": "01HDGG56RYG1QB36T5Q1262ZMW",
     "name": "Merged",
     "rank": -2,
@@ -65,7 +65,7 @@
   {
     "category": "declined",
     "created_at": "2023-10-24T09:27:22.699Z",
-    "description": " ",
+    "description": "",
     "id": "01HDGG56RYQ3QR7T1XRGSTVDKQ",
     "name": "Declined",
     "rank": -1,
@@ -92,7 +92,7 @@
   {
     "category": "paused",
     "created_at": "2024-02-05T14:00:55.633Z",
-    "description": " ",
+    "description": "",
     "id": "01HNWS4V2HEJB9Z81XWPP3XPAS",
     "name": "Paused",
     "rank": 7,

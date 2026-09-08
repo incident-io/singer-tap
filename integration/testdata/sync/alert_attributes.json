@@ -10,5 +10,11 @@
     "id": "01JRZFEXFS5VJCNA0CEH351MX8",
     "name": "Team",
     "type": "CatalogEntry[\"01JRZFEX8NMTJ1VESTTWJ1C1HJ\"]"
+  },
+  {
+    "array": false,
+    "id": "01KFBAKP6W8DCE7CVCRNP7XQGF",
+    "name": "Labels",
+    "type": "Labels"
   }
 ]

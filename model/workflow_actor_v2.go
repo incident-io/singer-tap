@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type workflowActorV2 struct{}
 
@@ -20,7 +20,7 @@ func (workflowActorV2) Schema() Property {
 	}
 }
 
-func (workflowActorV2) Serialize(input client.WorkflowActorV2) map[string]any {
+func (workflowActorV2) Serialize(input incident.WorkflowActorV2) map[string]any {
 	return map[string]any{
 		"id":   input.Id,
 		"name": input.Name,

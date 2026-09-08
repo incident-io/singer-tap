@@ -4,7 +4,7 @@ import (
 	"context"
 
 	kitlog "github.com/go-kit/log"
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/incident-io/singer-tap/model"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -31,7 +31,7 @@ func (s *StreamIncidents) Output() *Output {
 	}
 }
 
-func (s *StreamIncidents) GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error) {
+func (s *StreamIncidents) GetRecords(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses) ([]map[string]any, error) {
 	var (
 		after    *string
 		pageSize = int64(250)
@@ -40,7 +40,7 @@ func (s *StreamIncidents) GetRecords(ctx context.Context, logger kitlog.Logger, 
 
 	for {
 		logger.Log("msg", "loading page", "page_size", pageSize, "after", after)
-		page, err := cl.IncidentsV2ListWithResponse(ctx, &client.IncidentsV2ListParams{
+		page, err := cl.IncidentsV2ListWithResponse(ctx, &incident.IncidentsV2ListParams{
 			PageSize: &pageSize,
 			After:    after,
 		})
@@ -69,12 +69,12 @@ func (s *StreamIncidents) GetRecords(ctx context.Context, logger kitlog.Logger, 
 	}
 }
 
-func (s *StreamIncidents) GetAttachments(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses, incidentId string) ([]client.IncidentAttachmentV1, error) {
+func (s *StreamIncidents) GetAttachments(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses, incidentId string) ([]incident.IncidentAttachmentV1, error) {
 	var (
-		results = []client.IncidentAttachmentV1{}
+		results = []incident.IncidentAttachmentV1{}
 	)
 
-	response, err := cl.IncidentAttachmentsV1ListWithResponse(ctx, &client.IncidentAttachmentsV1ListParams{
+	response, err := cl.IncidentAttachmentsV1ListWithResponse(ctx, &incident.IncidentAttachmentsV1ListParams{
 		IncidentId: &incidentId,
 	})
 	if err != nil {
@@ -85,16 +85,16 @@ func (s *StreamIncidents) GetAttachments(ctx context.Context, logger kitlog.Logg
 	return results, nil
 }
 
-func (s *StreamIncidents) GetIncidentUpdates(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses, incidentId string) ([]client.IncidentUpdateV2, error) {
+func (s *StreamIncidents) GetIncidentUpdates(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses, incidentId string) ([]incident.IncidentUpdateV2, error) {
 	var (
 		after    *string
 		pageSize int64 = 250
-		results        = []client.IncidentUpdateV2{}
+		results        = []incident.IncidentUpdateV2{}
 	)
 
 	for {
 		logger.Log("msg", "loading incident updates page", "page_size", pageSize, "after", after)
-		page, err := cl.IncidentUpdatesV2ListWithResponse(ctx, &client.IncidentUpdatesV2ListParams{
+		page, err := cl.IncidentUpdatesV2ListWithResponse(ctx, &incident.IncidentUpdatesV2ListParams{
 			IncidentId: &incidentId,
 			PageSize:   &pageSize,
 			After:      after,

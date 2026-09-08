@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	kitlog "github.com/go-kit/log"
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 )
 
 var streams = map[string]Stream{}
@@ -26,5 +26,5 @@ type Stream interface {
 	Output() *Output
 	// GetRecords returns a slice of entries in the stream. People will eventually ask for
 	// this to be a channel, but we're going simple and loading everything for now.
-	GetRecords(ctx context.Context, logger kitlog.Logger, cl *client.ClientWithResponses) ([]map[string]any, error)
+	GetRecords(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses) ([]map[string]any, error)
 }

@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 	"github.com/samber/lo"
 )
 
@@ -41,10 +41,10 @@ func (alertV2) Schema() Property {
 	}
 }
 
-func (alertV2) Serialize(input client.AlertV2) map[string]any {
+func (alertV2) Serialize(input incident.AlertV2) map[string]any {
 	attributes := []map[string]any{}
 	if len(input.Attributes) > 0 {
-		attributes = lo.Map(input.Attributes, func(entry client.AlertAttributeEntryV2, _ int) map[string]any {
+		attributes = lo.Map(input.Attributes, func(entry incident.AlertAttributeEntryV2, _ int) map[string]any {
 			return AlertAttributeEntryV2.Serialize(entry)
 		})
 	}

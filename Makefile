@@ -36,19 +36,3 @@ tools:
 	go mod download \
 		&& cat tools.go | grep _ | awk -F'"' '{print $$2}' | xargs -tI % go install %
 
-################################################################################
-# Clients
-################################################################################
-
-.PHONY: client/client.gen.go client/openapi3.json
-
-client/client.gen.go:
-	rm -rf $@
-	oapi-codegen \
-		--generate types,client \
-		--package client \
-		--o $@ \
-		client/openapi3.json
-
-client/openapi3.json:
-	curl https://api.incident.io/v1/openapiV3.json | jq . > $@

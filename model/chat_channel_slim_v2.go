@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type chatChannelSlimV2 struct{}
 
@@ -26,7 +26,7 @@ func (chatChannelSlimV2) Schema() Property {
 	}
 }
 
-func (chatChannelSlimV2) Serialize(input client.ChatChannelSlimV2) map[string]any {
+func (chatChannelSlimV2) Serialize(input incident.ChatChannelSlimV2) map[string]any {
 	result := make(map[string]any)
 	
 	if input.SlackChannelId != nil {

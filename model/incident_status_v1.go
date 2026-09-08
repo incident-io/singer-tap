@@ -1,6 +1,6 @@
 package model
 
-import "github.com/incident-io/singer-tap/client"
+import incident "github.com/incident-io/sdk-go"
 
 type incidentStatusV1 struct{}
 
@@ -31,7 +31,7 @@ func (incidentStatusV1) Schema() Property {
 	}
 }
 
-func (incidentStatusV1) Serialize(input client.IncidentStatusV1) map[string]any {
+func (incidentStatusV1) Serialize(input incident.IncidentStatusV1) map[string]any {
 	// Just flat convert everything into a map[string]any
 	return DumpToMap(input)
 }

@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 )
 
 type alertAttributeValueV2 struct{}
@@ -33,7 +33,7 @@ func (alertAttributeValueV2) Schema() Property {
 	}
 }
 
-func (alertAttributeValueV2) Serialize(input client.AlertAttributeValueV2) map[string]any {
+func (alertAttributeValueV2) Serialize(input incident.AlertAttributeValueV2) map[string]any {
 	result := map[string]any{}
 	
 	if input.CatalogEntry != nil {

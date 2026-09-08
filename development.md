@@ -35,24 +35,20 @@ Note: If you provide both environment variables and a config file, the config fi
 
 ## Updating the API client
 
-When the incident.io API changes, you need to refresh the client code:
+The API client comes from [`github.com/incident-io/sdk-go`][sdk], the official Go
+SDK, which is generated from our published OpenAPI schema and released whenever
+that schema changes. There is no client to regenerate here — to pick up new
+endpoints or fields, bump the dependency:
 
-1. **Update the OpenAPI specification**:
-   ```
-   make client/openapi3.json
-   ```
-   This fetches the latest API spec from https://api.incident.io/v1/openapiV3.json
+```
+go get github.com/incident-io/sdk-go@latest
+go mod tidy
+```
 
-2. **Regenerate the client code**:
-   ```
-   make client/client.gen.go
-   ```
-   This uses `oapi-codegen` to generate Go types and client methods from the OpenAPI spec
+`client/client.go` wraps the SDK's constructor to add retries and to turn non-2xx
+responses into errors.
 
-3. **Update dependencies** (if needed):
-   ```
-   go mod tidy
-   ```
+[sdk]: https://github.com/incident-io/sdk-go
 
 ## Adding new streams
 

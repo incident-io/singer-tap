@@ -2,11 +2,11 @@ package model
 
 import incident "github.com/incident-io/sdk-go"
 
-type followUpV2 struct{}
+type followUpV3 struct{}
 
-var FollowUpV2 followUpV2
+var FollowUpV3 followUpV3
 
-func (followUpV2) Schema() Property {
+func (followUpV3) Schema() Property {
 	return Property{
 		Types: []string{"object"},
 		Properties: map[string]Property{
@@ -18,6 +18,7 @@ func (followUpV2) Schema() Property {
 				Types: []string{"string"},
 			},
 			"priority": Optional(FollowUpPriorityV2.Schema()),
+			"category": Optional(FollowUpCategoryV3.Schema()),
 			"status": {
 				Types: []string{"string"},
 			},
@@ -35,7 +36,7 @@ func (followUpV2) Schema() Property {
 	}
 }
 
-func (followUpV2) Serialize(input incident.FollowUpV2) map[string]any {
+func (followUpV3) Serialize(input incident.FollowUpV3) map[string]any {
 	var external_issue_reference map[string]any
 	if input.ExternalIssueReference != nil {
 		external_issue_reference = ExternalIssueReferenceV2.Serialize(input.ExternalIssueReference)
@@ -51,6 +52,7 @@ func (followUpV2) Serialize(input incident.FollowUpV2) map[string]any {
 		"id":                       input.Id,
 		"incident_id":              input.IncidentId,
 		"priority":                 FollowUpPriorityV2.Serialize(input.Priority),
+		"category":                 FollowUpCategoryV3.Serialize(input.Category),
 		"status":                   input.Status,
 		"title":                    input.Title,
 		"description":              input.Description,

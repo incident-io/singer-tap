@@ -5,10 +5,10 @@ import (
 	"time"
 
 	kitlog "github.com/go-kit/log"
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 )
 
-func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *client.ClientWithResponses, catalog *Catalog) error {
+func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *incident.ClientWithResponses, catalog *Catalog) error {
 	// If we weren't given a catalog, create a default one and use that
 	if catalog == nil {
 		catalog = NewDefaultCatalog(streams)

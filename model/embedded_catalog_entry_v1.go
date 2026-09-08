@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/incident-io/singer-tap/client"
+	incident "github.com/incident-io/sdk-go"
 )
 
 type embeddedCatalogEntryV1 struct{}
@@ -31,7 +31,7 @@ func (embeddedCatalogEntryV1) Schema() Property {
 	}
 }
 
-func (embeddedCatalogEntryV1) Serialize(input *client.EmbeddedCatalogEntryV1) map[string]any {
+func (embeddedCatalogEntryV1) Serialize(input *incident.EmbeddedCatalogEntryV1) map[string]any {
 	if input == nil {
 		return nil
 	}

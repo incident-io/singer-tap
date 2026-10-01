@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.7.1
+
+- Building the tap now needs Go 1.27. Release binaries are built with Go 1.27.1.
+- Upgraded all Go dependencies, including `sdk-go` from 1.0.98 to 1.9.0.
+- The Docker image now uses `alpine:3.24.2` and upgrades its packages at
+  build time.
+
 ## v0.7.0
 
 - Actions and follow-ups are now read from the paginated `/v3/actions` and

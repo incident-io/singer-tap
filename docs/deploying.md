@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Install tap-incident
           command: |
-            VERSION="0.7.0"
+            VERSION="0.7.1"
 
             echo "Installing importer v${VERSION}..."
             curl -L \

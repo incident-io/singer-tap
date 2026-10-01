@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Install tap-incident
           command: |
-            VERSION="0.1.0"
+            VERSION="0.7.0"
 
             echo "Installing importer v${VERSION}..."
             curl -L \
@@ -62,13 +62,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v7
         with:
-          go-version: "1.21"
+          go-version: stable
       - name: Install tap-incident
         run: |
           go install github.com/incident-io/singer-tap/cmd/tap-incident@latest

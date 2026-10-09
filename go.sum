@@ -47,8 +47,8 @@ github.com/hashicorp/go-hclog v1.6.3 h1:Qr2kF+eVWjTiYmU7Y31tYlP1h0q/X3Nl3tPGdaB1
 github.com/hashicorp/go-hclog v1.6.3/go.mod h1:W4Qnvbt70Wk/zYJryRzDRU/4r0kIg0PVHBcfoyhpF5M=
 github.com/hashicorp/go-retryablehttp v0.7.8 h1:ylXZWnqa7Lhqpk0L1P1LzDtGcCR0rPVUrx/c8Unxc48=
 github.com/hashicorp/go-retryablehttp v0.7.8/go.mod h1:rjiScheydd+CxvumBsIrFKlx3iS0jrZ7LvzFGFmuKbw=
-github.com/incident-io/sdk-go v1.9.0 h1:hkhC5kSi4DNT0n3HOKkGjfCJQDWwX3U9CtZdWzKcwkQ=
-github.com/incident-io/sdk-go v1.9.0/go.mod h1:Hlmdnl3Rk6k24R2TcJUyO/xZYtoSbc74afTZxTlu2nU=
+github.com/incident-io/sdk-go v1.22.0 h1:zesoUrK+gM7H6ftEWDqKgV9clUGufRZTRB4FOwhqWUk=
+github.com/incident-io/sdk-go v1.22.0/go.mod h1:Hlmdnl3Rk6k24R2TcJUyO/xZYtoSbc74afTZxTlu2nU=
 github.com/joshdk/go-junit v1.0.0 h1:S86cUKIdwBHWwA6xCmFlf3RTLfVXYQfvanM5Uh+K6GE=
 github.com/joshdk/go-junit v1.0.0/go.mod h1:TiiV0PqkaNfFXjEiyjWM3XXrhVyCa1K4Zfga6W52ung=
 github.com/juju/gnuflag v0.0.0-20171113085948-2ce1bb71843d/go.mod h1:2PavIy+JPciBPrBUjwbNvtwB6RQlve+hkpll6QSNmOE=

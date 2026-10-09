@@ -2,6 +2,7 @@ package tap
 
 import (
 	"context"
+	"time"
 
 	kitlog "github.com/go-kit/log"
 	incident "github.com/incident-io/sdk-go"
@@ -11,6 +12,8 @@ import (
 type Filter struct {
 	Stream       Stream
 	CatalogEntry CatalogEntry
+	// Since is the bookmark to fetch from, used only if Stream is an IncrementalStream.
+	Since *time.Time
 }
 
 func (s *Filter) Output() *Output {
@@ -23,7 +26,15 @@ func (s *Filter) Output() *Output {
 }
 
 func (s *Filter) GetRecords(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses) ([]map[string]any, error) {
-	records, err := s.Stream.GetRecords(ctx, logger, cl)
+	var (
+		records []map[string]any
+		err     error
+	)
+	if incremental, ok := s.Stream.(IncrementalStream); ok {
+		records, err = incremental.GetRecordsSince(ctx, logger, cl, s.Since)
+	} else {
+		records, err = s.Stream.GetRecords(ctx, logger, cl)
+	}
 	if err != nil {
 		return nil, err
 	}

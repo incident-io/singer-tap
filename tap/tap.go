@@ -8,10 +8,15 @@ import (
 	incident "github.com/incident-io/sdk-go"
 )
 
-func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *incident.ClientWithResponses, catalog *Catalog) error {
+func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *incident.ClientWithResponses, catalog *Catalog, state *State) error {
 	// If we weren't given a catalog, create a default one and use that
 	if catalog == nil {
 		catalog = NewDefaultCatalog(streams)
+	}
+
+	// If we weren't given a state, every incremental stream fetches its whole history
+	if state == nil {
+		state = &State{}
 	}
 
 	// We only want to sync enabled streams
@@ -26,12 +31,25 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *incid
 
 		logger := kitlog.With(logger, "stream", catalogEntry.Stream)
 
+		_, incremental := stream.Stream.(IncrementalStream)
+		if incremental {
+			since, err := state.GetBookmark(catalogEntry.Stream)
+			if err != nil {
+				return err
+			}
+
+			stream.Since = since
+		}
+
 		logger.Log("msg", "outputting schema")
 		if err := ol.Log(stream.Output()); err != nil {
 			return err
 		}
 
-		timeExtracted := time.Now().UTC().Format(time.RFC3339)
+		// Taken before fetching, so the next run picks up anything updated while we page
+		// through this one.
+		startedAt := time.Now()
+		timeExtracted := startedAt.UTC().Format(time.RFC3339)
 		logger.Log("msg", "loading records", "time_extracted", timeExtracted)
 
 		records, err := stream.GetRecords(ctx, logger, cl)
@@ -48,6 +66,16 @@ func Sync(ctx context.Context, logger kitlog.Logger, ol *OutputLogger, cl *incid
 				TimeExtracted: timeExtracted,
 			}
 			if err := ol.Log(op); err != nil {
+				return err
+			}
+		}
+
+		// Only advance the bookmark once every record has been written. Targets keep the
+		// last STATE they receive, so it carries the bookmarks for every stream.
+		if incremental {
+			state.SetBookmark(catalogEntry.Stream, startedAt)
+			logger.Log("msg", "outputting state", "bookmark", state.Bookmarks[catalogEntry.Stream][BookmarkKey])
+			if err := ol.Log(&Output{Type: OutputTypeState, Value: state}); err != nil {
 				return err
 			}
 		}

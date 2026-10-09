@@ -14,16 +14,16 @@ type OutputType string
 var (
 	OutputTypeSchema OutputType = "SCHEMA"
 	OutputTypeRecord OutputType = "RECORD"
+	OutputTypeState  OutputType = "STATE"
 )
 
 // Output is what we log to STDOUT as a message provided to the downstream Singer target.
 //
-// This tap supports type types of output:
+// This tap supports three types of output:
 //
 // - SCHEMA: Specifies the schema of this stream in JSON schema format.
 // - RECORD: A record from the stream.
-//
-// We (currently) do not support the other types of output such as STATE.
+// - STATE: The bookmarks to resume incremental streams from on the next run.
 type Output struct {
 	// Type is the type of the stream, e.g. "SCHEMA" or "RECORD"
 	Type OutputType `json:"type,omitempty"`
@@ -45,6 +45,8 @@ type Output struct {
 	// BookmarkProperties is an optional list of strings indicating which properties
 	// should be used to bookmark the stream, such as "last_updated_at".
 	BookmarkProperties []string `json:"bookmark_properties,omitempty"`
+	// Value is the state to persist for the next run, if Type == "STATE".
+	Value *State `json:"value,omitempty"`
 }
 
 // OutputLogger is a logger that logs to STDOUT in the format expected by the downstream

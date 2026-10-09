@@ -23,11 +23,11 @@ type MetadataFields struct {
 	Selected *bool `json:"selected,omitempty"`
 
 	// ReplicationMethod: the replication method to use
-	// we ignored for our tap
-	ReplicationMethod *string `json:"replicate-method,omitempty"`
+	// we ignored for our tap, as every stream has a forced replication method
+	ReplicationMethod *string `json:"replication-method,omitempty"`
 
 	// ReplicationKey: the replicate key for this node
-	// Used as a bookmark - ignore for our tap
+	// Used as a bookmark - ignore for our tap, as incremental streams always use updated_at
 	ReplicationKey *string `json:"replication-key,omitempty"`
 
 	// ViewKeyProperties: not sure how this is used
@@ -48,21 +48,30 @@ type MetadataFields struct {
 	// This really only applies to available inclusion setting
 	SelectedByDefault bool `json:"selected-by-default,omitempty"`
 
-	// ForcedReplicateMethod: we will set to FULL_TABLE for our tap
+	// ForcedReplicateMethod: INCREMENTAL for streams that support it, FULL_TABLE otherwise
 	ForcedReplicationMethod string `json:"forced-replication-method,omitempty"`
+
+	// ValidReplicationKeys: the fields an incremental stream can bookmark on
+	ValidReplicationKeys []string `json:"valid-replication-keys,omitempty"`
 }
 
-func (m Metadata) DefaultMetadata(schema model.Schema) []Metadata {
+func (m Metadata) DefaultMetadata(schema model.Schema, incremental bool) []Metadata {
+	streamMetadata := MetadataFields{
+		Inclusion:               "available",  // always set to available at stream level
+		SelectedByDefault:       true,         // lets assume people always want our data
+		ForcedReplicationMethod: "FULL_TABLE", // HIGHWAY TO THE DATA ZONE
+	}
+	if incremental {
+		streamMetadata.ForcedReplicationMethod = "INCREMENTAL"
+		streamMetadata.ValidReplicationKeys = []string{BookmarkKey}
+	}
+
 	// By default we always include a top level metadata with the same
 	// settings
 	var metadata = []Metadata{
 		{
 			Breadcrumb: []string{},
-			Metadata: MetadataFields{
-				Inclusion:               "available",  // always set to available at stream level
-				SelectedByDefault:       true,         // lets assume people always want our data
-				ForcedReplicationMethod: "FULL_TABLE", // HIGHWAY TO THE DATA ZONE
-			},
+			Metadata:   streamMetadata,
 		},
 	}
 
@@ -71,10 +80,16 @@ func (m Metadata) DefaultMetadata(schema model.Schema) []Metadata {
 	// We might want to get more intelligent later - as this way people could stop themselves
 	// from getting key data by accident
 	for name := range schema.Properties {
+		inclusion := "available"
+		// Incremental streams always emit the key targets upsert on, and the replication key
+		if incremental && (name == "id" || name == BookmarkKey) {
+			inclusion = "automatic"
+		}
+
 		metadata = append(metadata, Metadata{
 			Breadcrumb: []string{"properties", name},
 			Metadata: MetadataFields{
-				Inclusion:         "available",
+				Inclusion:         inclusion,
 				SelectedByDefault: true,
 			},
 		})

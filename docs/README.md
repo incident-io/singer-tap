@@ -96,6 +96,41 @@ You can adjust which columns within a stream you wish to export similarly, by ad
     },
 ```
 
+## Incremental sync
+
+The actions and follow_ups streams sync incrementally on `updated_at`. Every
+other stream is a full sync on every run.
+
+After each incremental stream finishes, the tap writes a `STATE` message to
+stdout with a bookmark for that stream:
+
+```json
+{"type": "STATE", "value": {"bookmarks": {"actions": {"updated_at": "2026-10-09T09:00:00Z"}, "follow_ups": {"updated_at": "2026-10-09T09:00:01Z"}}}}
+```
+
+Save the `value` of the last `STATE` message to a file and pass it back with
+`--state` on the next run. The tap then fetches only the actions and follow-ups
+created or changed since the bookmark:
+
+```console
+$ tap-incident --config=config.json --state=state.json
+```
+
+Runners such as Stitch and Meltano save and pass the state for you. Without
+`--state`, the tap fetches every action and follow-up, as it does on a first run.
+
+Things to know:
+
+- Your target must upsert on `id`, so that changed records replace the rows
+  already loaded. Singer targets do this for streams with key properties.
+- Each run re-fetches up to two days of changes before the bookmark. The API
+  filters on dates, so the tap goes back a day to be safe. The upsert makes
+  these duplicates harmless.
+- Actions and follow-ups deleted in incident.io are never fetched again, so they
+  stay in your destination. Run without `--state` to reload everything.
+- `id` and `updated_at` are always exported for these streams, even if your
+  catalog deselects them.
+
 ## Table Information
 
 ### Incidents
@@ -111,7 +146,7 @@ You can adjust which columns within a stream you wish to export similarly, by ad
 - Table name: actions
 - Description: Incident actions are used during an incident, to track work such as 'restart the database' or 'contact the customer'. Actions are also included in the incidents table.
 - Primary key column(s): id, incident_id
-- Replication: full table
+- Replication: incremental, on updated_at
 - API documentation: [Actions V2](https://api-docs.incident.io/tag/Actions-V2)
 
 ### Custom Field Options
@@ -135,7 +170,7 @@ You can adjust which columns within a stream you wish to export similarly, by ad
 - Table name: follow_ups
 - Description: Incidents can have follow-ups associated with them, which track work that should be done after an incident (e.g. improving some documentation, or upgrading a dependency). They can also be exported to external issue trackers.
 - Primary key column(s): id, incident_id
-- Replication: full table
+- Replication: incremental, on updated_at
 - API documentation: [Follow Ups V2](https://api-docs.incident.io/tag/Follow-ups-V2)
 
 ### Incident Roles

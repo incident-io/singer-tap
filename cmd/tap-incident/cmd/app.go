@@ -31,6 +31,7 @@ var (
 	debug         = app.Flag("debug", "Enable debug logging").Default("false").Bool()
 	configFile    = app.Flag("config", "Configuration file").ExistingFile()
 	catalogFile   = app.Flag("catalog", "If set, allows filtering which streams would be synced").ExistingFile()
+	stateFile     = app.Flag("state", "If set, incremental streams only fetch records updated since the bookmarks in this file").ExistingFile()
 	discoveryMode = app.Flag("discover", "If set, only outputs the catalog and exits").Default("false").Bool()
 )
 
@@ -89,6 +90,7 @@ func Run(ctx context.Context) (err error) {
 		// If we're syncing - check if we were given a catalog
 		var (
 			catalog *tap.Catalog
+			state   *tap.State
 			err     error
 		)
 
@@ -99,7 +101,14 @@ func Run(ctx context.Context) (err error) {
 			}
 		}
 
-		err = tap.Sync(ctx, logger, ol, cl, catalog)
+		if *stateFile != "" {
+			state, err = loadStateOrError(ctx, *stateFile)
+			if err != nil {
+				return err
+			}
+		}
+
+		err = tap.Sync(ctx, logger, ol, cl, catalog, state)
 		if err != nil {
 			return err
 		}
@@ -143,6 +152,22 @@ func loadCatalogOrError(ctx context.Context, catalogFile string) (catalog *tap.C
 	}
 
 	return catalog, nil
+}
+
+func loadStateOrError(ctx context.Context, stateFile string) (state *tap.State, err error) {
+	defer func() {
+		if err == nil {
+			return
+		}
+		OUT("Failed to load state file!\n")
+	}()
+
+	state, err = config.LoadAndParse(stateFile, tap.State{})
+	if err != nil {
+		return nil, errors.Wrap(err, "loading state")
+	}
+
+	return state, nil
 }
 
 func loadConfigOrError(ctx context.Context, configFile string) (cfg *config.Config, err error) {

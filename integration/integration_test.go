@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/onsi/gomega/gexec"
 
@@ -98,6 +99,54 @@ var _ = Describe("Integration", Ordered, func() {
 				By("stream: " + stream)
 				ExpectToMatchSnapshot(records, fmt.Sprintf("testdata/sync/%s.json", stream))
 			}
+
+			Eventually(session).Should(gexec.Exit(0))
+		})
+
+		It("only returns follow-ups and actions updated since the state bookmark", func() {
+			// The fixtures were last updated long before this bookmark, so the API should
+			// filter all of them out.
+			bookmark := time.Now().UTC().Format(time.RFC3339)
+
+			stateFile, err := os.CreateTemp("", "state.json")
+			Expect(err).ToNot(HaveOccurred())
+			defer os.Remove(stateFile.Name())
+
+			_, err = stateFile.WriteString(fmt.Sprintf(
+				`{"bookmarks": {"follow_ups": {"updated_at": "%s"}, "actions": {"updated_at": "%s"}}}`, bookmark, bookmark))
+			Expect(err).ToNot(HaveOccurred())
+
+			cmd := exec.Command(tapPath, "--config", configFile.Name(), "--catalog", "./test_catalog.json", "--state", stateFile.Name())
+
+			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
+			Expect(err).ToNot(HaveOccurred())
+
+			output := string(session.Wait("10s").Out.Contents())
+
+			var (
+				recordsByStream = map[string]int{}
+				lastState       map[string]any
+			)
+			for _, line := range strings.Split(output, "\n") {
+				var object map[string]any
+				if err := json.Unmarshal([]byte(line), &object); err != nil {
+					continue
+				}
+
+				switch object["type"] {
+				case "RECORD":
+					recordsByStream[object["stream"].(string)]++
+				case "STATE":
+					lastState = object["value"].(map[string]any)
+				}
+			}
+
+			Expect(recordsByStream).NotTo(HaveKey("follow_ups"))
+			Expect(recordsByStream).NotTo(HaveKey("actions"))
+
+			Expect(lastState).NotTo(BeNil())
+			Expect(lastState["bookmarks"]).To(HaveKey("follow_ups"))
+			Expect(lastState["bookmarks"]).To(HaveKey("actions"))
 
 			Eventually(session).Should(gexec.Exit(0))
 		})

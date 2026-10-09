@@ -73,6 +73,11 @@ func (c *CatalogEntry) GetDisabledFields() map[string]bool {
 			continue
 		}
 
+		// Automatic fields are always emitted, even if deselected
+		if metadata.Metadata.Inclusion == "automatic" {
+			continue
+		}
+
 		// Check if the metadata has the user input "selected" bool
 		if metadata.Metadata.Selected != nil {
 			// If so, check its set to false!
@@ -95,7 +100,8 @@ func NewDefaultCatalog(streams map[string]Stream) *Catalog {
 
 	for name, stream := range streams {
 		streamSchema := *stream.Output().Schema
-		metadata := Metadata{}.DefaultMetadata(streamSchema)
+		_, incremental := stream.(IncrementalStream)
+		metadata := Metadata{}.DefaultMetadata(streamSchema, incremental)
 
 		// Sort our metadata to make it deterministic
 		slices.SortFunc(metadata, func(i, j Metadata) int {

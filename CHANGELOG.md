@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.8.0
 
 - The actions and follow_ups streams now sync incrementally on `updated_at`.
   The tap accepts a `--state` file and emits `STATE` messages with a bookmark
@@ -11,6 +11,7 @@
 - Targets that replaced these tables on each run now upsert into them instead,
   so actions and follow-ups deleted in incident.io are no longer removed from
   the destination.
+- Upgraded `sdk-go` from 1.9.0 to 1.22.0.
 
 ## v0.7.1
 

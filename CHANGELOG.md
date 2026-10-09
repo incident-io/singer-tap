@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- The actions and follow_ups streams now sync incrementally on `updated_at`.
+  The tap accepts a `--state` file and emits `STATE` messages with a bookmark
+  per stream. With a bookmark, only actions and follow-ups changed since that
+  time are fetched. Without one, the tap fetches everything, as before.
+- Discovery marks these two streams `INCREMENTAL` with `updated_at` as the
+  replication key, and always includes their `id` and `updated_at` fields.
+- Targets that replaced these tables on each run now upsert into them instead,
+  so actions and follow-ups deleted in incident.io are no longer removed from
+  the destination.
+
 ## v0.7.1
 
 - Building the tap now needs Go 1.27. Release binaries are built with Go 1.27.1.

@@ -2,6 +2,7 @@ package tap
 
 import (
 	"context"
+	"time"
 
 	kitlog "github.com/go-kit/log"
 	incident "github.com/incident-io/sdk-go"
@@ -26,11 +27,15 @@ func (s *StreamActions) Output() *Output {
 			Properties:              model.ActionV3.Schema().Properties,
 		},
 		KeyProperties:      []string{"id"},
-		BookmarkProperties: []string{},
+		BookmarkProperties: []string{BookmarkKey},
 	}
 }
 
 func (s *StreamActions) GetRecords(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses) ([]map[string]any, error) {
+	return s.GetRecordsSince(ctx, logger, cl, nil)
+}
+
+func (s *StreamActions) GetRecordsSince(ctx context.Context, logger kitlog.Logger, cl *incident.ClientWithResponses, since *time.Time) ([]map[string]any, error) {
 	var (
 		after    *string
 		pageSize = int64(250)
@@ -38,11 +43,16 @@ func (s *StreamActions) GetRecords(ctx context.Context, logger kitlog.Logger, cl
 	)
 
 	for {
-		logger.Log("msg", "loading actions page", "page_size", pageSize, "after", after)
-		page, err := cl.ActionsV3ListWithResponse(ctx, &incident.ActionsV3ListParams{
+		logger.Log("msg", "loading actions page", "page_size", pageSize, "after", after, "since", since)
+		params := &incident.ActionsV3ListParams{
 			PageSize: &pageSize,
 			After:    after,
-		})
+		}
+		if since != nil {
+			params.UpdatedAt = UpdatedSinceFilter(*since)
+		}
+
+		page, err := cl.ActionsV3ListWithResponse(ctx, params)
 		if err != nil {
 			return nil, errors.Wrap(err, "listing actions")
 		}

@@ -24,9 +24,11 @@ following scope:
 
 ## incident.io Tap Replication
 
-There is no partial or incremental replication available in the incident.io tap. Instead each stream will perform a full table replication each time.
+The actions and follow_ups streams replicate incrementally on `updated_at`. The first sync loads every action and follow-up. Each later sync loads only the ones created or changed since the previous sync, and Stitch upserts them on `id`. To load everything again, reset replication for the integration.
 
-The amount of data in each stream is relatively low so this should not be an issue for most customers.
+Actions and follow-ups deleted in incident.io are not removed from the destination by incremental syncs.
+
+Every other stream performs a full table replication each time. The amount of data in those streams is relatively low, so this should not be an issue for most customers.
 
 ---
 
@@ -45,7 +47,7 @@ The amount of data in each stream is relatively low so this should not be an iss
 - Table name: actions
 - Description: Incident actions are used during an incident, to track work such as 'restart the database' or 'contact the customer'. Actions are also included in the incidents table.
 - Primary key column(s): id, incident_id
-- Replication: full table
+- Replication: incremental, on updated_at
 - API documentation: [Actions V2](https://api-docs.incident.io/tag/Actions-V2)
 
 ### Custom Field Options
@@ -69,7 +71,7 @@ The amount of data in each stream is relatively low so this should not be an iss
 - Table name: follow_ups
 - Description: Incidents can have follow-ups associated with them, which track work that should be done after an incident (e.g. improving some documentation, or upgrading a dependency). They can also be exported to external issue trackers.
 - Primary key column(s): id, incident_id
-- Replication: full table
+- Replication: incremental, on updated_at
 - API documentation: [Follow Ups V2](https://api-docs.incident.io/tag/Follow-ups-V2)
 
 ### Incident Roles

@@ -2298,9 +2298,12 @@
         {
           "breadcrumb": [],
           "metadata": {
-            "forced-replication-method": "FULL_TABLE",
+            "forced-replication-method": "INCREMENTAL",
             "inclusion": "available",
-            "selected-by-default": true
+            "selected-by-default": true,
+            "valid-replication-keys": [
+              "updated_at"
+            ]
           }
         },
         {
@@ -2369,7 +2372,7 @@
             "id"
           ],
           "metadata": {
-            "inclusion": "available",
+            "inclusion": "automatic",
             "selected-by-default": true
           }
         },
@@ -2519,7 +2522,7 @@
             "updated_at"
           ],
           "metadata": {
-            "inclusion": "available",
+            "inclusion": "automatic",
             "selected-by-default": true
           }
         },

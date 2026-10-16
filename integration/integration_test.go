@@ -103,7 +103,7 @@ var _ = Describe("Integration", Ordered, func() {
 			Eventually(session).Should(gexec.Exit(0))
 		})
 
-		It("only returns follow-ups and actions updated since the state bookmark", func() {
+		It("only returns follow-ups, actions and incidents updated since the state bookmark", func() {
 			// The fixtures were last updated long before this bookmark, so the API should
 			// filter all of them out.
 			bookmark := time.Now().UTC().Format(time.RFC3339)
@@ -113,7 +113,8 @@ var _ = Describe("Integration", Ordered, func() {
 			defer os.Remove(stateFile.Name())
 
 			_, err = stateFile.WriteString(fmt.Sprintf(
-				`{"bookmarks": {"follow_ups": {"updated_at": "%s"}, "actions": {"updated_at": "%s"}}}`, bookmark, bookmark))
+				`{"bookmarks": {"follow_ups": {"updated_at": "%s"}, "actions": {"updated_at": "%s"}, "incidents": {"updated_at": "%s"}}}`,
+				bookmark, bookmark, bookmark))
 			Expect(err).ToNot(HaveOccurred())
 
 			cmd := exec.Command(tapPath, "--config", configFile.Name(), "--catalog", "./test_catalog.json", "--state", stateFile.Name())
@@ -143,10 +144,12 @@ var _ = Describe("Integration", Ordered, func() {
 
 			Expect(recordsByStream).NotTo(HaveKey("follow_ups"))
 			Expect(recordsByStream).NotTo(HaveKey("actions"))
+			Expect(recordsByStream).NotTo(HaveKey("incidents"))
 
 			Expect(lastState).NotTo(BeNil())
 			Expect(lastState["bookmarks"]).To(HaveKey("follow_ups"))
 			Expect(lastState["bookmarks"]).To(HaveKey("actions"))
+			Expect(lastState["bookmarks"]).To(HaveKey("incidents"))
 
 			Eventually(session).Should(gexec.Exit(0))
 		})

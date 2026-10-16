@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -28,7 +29,7 @@ var _ = Describe("Sync", func() {
 		state  *tap.State
 	)
 
-	// sync runs the tap against the fake API, for the follow_ups and actions streams only.
+	// sync runs the tap against the fake API.
 	sync := func(catalog *tap.Catalog) error {
 		cl, err := client.New(ctx, "test-api-key", server.URL, "test")
 		Expect(err).NotTo(HaveOccurred())
@@ -161,6 +162,54 @@ var _ = Describe("Sync", func() {
 		})
 	})
 
+	Context("incidents", func() {
+		It("fetches every page, and each incident's attachments and updates, with no filter", func() {
+			Expect(sync(catalogFor("incidents"))).To(Succeed())
+
+			queries := server.Requests("/v2/incidents")
+			Expect(queries).To(HaveLen(3)) // two pages, then the empty page that ends pagination
+			for _, query := range queries {
+				Expect(query.Has("updated_at[gte]")).To(BeFalse())
+			}
+
+			Expect(recordIDs(out, "incidents")).To(Equal([]string{"incident-1", "incident-2"}))
+			Expect(incidentIDs(server.Requests("/v1/incident_attachments"))).To(Equal([]string{"incident-1", "incident-2"}))
+			Expect(incidentIDs(server.Requests("/v2/incident_updates"))).To(Equal([]string{"incident-1", "incident-2"}))
+
+			states := stateMessages(out)
+			Expect(states).To(HaveLen(1))
+			bookmark, err := states[0].GetBookmark("incidents")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(bookmark).NotTo(BeNil())
+		})
+
+		It("filters every page on updated_at when there's a bookmark", func() {
+			state = &tap.State{
+				Bookmarks: map[string]map[string]string{
+					"incidents": {"updated_at": "2026-10-08T12:00:00Z"},
+				},
+			}
+
+			Expect(sync(catalogFor("incidents"))).To(Succeed())
+
+			queries := server.Requests("/v2/incidents")
+			Expect(queries).To(HaveLen(3))
+			for _, query := range queries {
+				Expect(query["updated_at[gte]"]).To(Equal([]string{"2026-10-07"}))
+			}
+		})
+
+		It("emits each incident once when the API restarts from the first page", func() {
+			server.RestartIncidentsOnce()
+
+			Expect(sync(catalogFor("incidents"))).To(Succeed())
+
+			Expect(server.Requests("/v2/incidents")).To(HaveLen(4))
+			Expect(recordIDs(out, "incidents")).To(Equal([]string{"incident-1", "incident-2"}))
+			Expect(incidentIDs(server.Requests("/v1/incident_attachments"))).To(Equal([]string{"incident-1", "incident-2"}))
+		})
+	})
+
 	Context("when the catalog deselects the replication key", func() {
 		It("still emits updated_at and id", func() {
 			catalog := incrementalCatalog()
@@ -185,13 +234,13 @@ var _ = Describe("Sync", func() {
 })
 
 var _ = Describe("Discover", func() {
-	It("marks follow_ups and actions as incremental on updated_at", func() {
+	It("marks follow_ups, actions and incidents as incremental on updated_at", func() {
 		catalog := discover()
 
 		for _, entry := range catalog.Streams {
 			top := (*entry.Metadata)[0].Metadata
 			switch entry.Stream {
-			case "follow_ups", "actions":
+			case "follow_ups", "actions", "incidents":
 				Expect(top.ForcedReplicationMethod).To(Equal("INCREMENTAL"), entry.Stream)
 				Expect(top.ValidReplicationKeys).To(Equal([]string{"updated_at"}), entry.Stream)
 			default:
@@ -221,19 +270,35 @@ func discover() *tap.Catalog {
 	return &catalog
 }
 
-// incrementalCatalog returns the default catalog, limited to the incremental streams.
+// incrementalCatalog returns the default catalog, limited to the follow_ups and actions
+// streams.
 func incrementalCatalog() *tap.Catalog {
+	return catalogFor("follow_ups", "actions")
+}
+
+// catalogFor returns the default catalog, limited to the given streams.
+func catalogFor(streams ...string) *tap.Catalog {
 	catalog := discover()
 
 	var entries []tap.CatalogEntry
 	for _, entry := range catalog.Streams {
-		if entry.Stream == "follow_ups" || entry.Stream == "actions" {
+		if slices.Contains(streams, entry.Stream) {
 			entries = append(entries, entry)
 		}
 	}
 	catalog.Streams = entries
 
 	return catalog
+}
+
+// incidentIDs returns the incident_id of each request, in order.
+func incidentIDs(queries []url.Values) []string {
+	var ids []string
+	for _, query := range queries {
+		ids = append(ids, query.Get("incident_id"))
+	}
+
+	return ids
 }
 
 func messages(out *bytes.Buffer) []map[string]any {
@@ -279,14 +344,15 @@ func stateMessages(out *bytes.Buffer) []tap.State {
 	return states
 }
 
-// fakeAPI serves two pages of follow-ups and actions, and records the query of every
-// request it receives.
+// fakeAPI serves two pages of follow-ups, actions and incidents, and records the query of
+// every request it receives.
 type fakeAPI struct {
 	*httptest.Server
 
-	mu         sync.Mutex
-	requests   map[string][]url.Values
-	failSecond map[string]bool
+	mu               sync.Mutex
+	requests         map[string][]url.Values
+	failSecond       map[string]bool
+	restartIncidents bool
 }
 
 func newFakeAPI() *fakeAPI {
@@ -315,6 +381,15 @@ func (f *fakeAPI) FailSecondPage(path string) {
 	f.failSecond[path] = true
 }
 
+// RestartIncidentsOnce makes the first request for the second page of incidents return
+// the first page again, as the API does when the after incident has been deleted.
+func (f *fakeAPI) RestartIncidentsOnce() {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+
+	f.restartIncidents = true
+}
+
 func (f *fakeAPI) serve(w http.ResponseWriter, r *http.Request) {
 	f.mu.Lock()
 	f.requests[r.URL.Path] = append(f.requests[r.URL.Path], r.URL.Query())
@@ -327,6 +402,18 @@ func (f *fakeAPI) serve(w http.ResponseWriter, r *http.Request) {
 		key, prefix = "follow_ups", "follow-up"
 	case "/v3/actions":
 		key, prefix = "actions", "action"
+	case "/v2/incidents":
+		f.serveIncidents(w, r)
+		return
+	case "/v1/incident_attachments":
+		writeJSON(w, map[string]any{"incident_attachments": []any{}})
+		return
+	case "/v2/incident_updates":
+		writeJSON(w, map[string]any{
+			"incident_updates": []any{},
+			"pagination_meta":  map[string]any{"page_size": 250},
+		})
+		return
 	default:
 		http.NotFound(w, r)
 		return
@@ -344,8 +431,7 @@ func (f *fakeAPI) serve(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	Expect(json.NewEncoder(w).Encode(map[string]any{
+	writeJSON(w, map[string]any{
 		key: []map[string]any{{
 			"id":          fmt.Sprintf("%s-%d", prefix, page),
 			"incident_id": "incident-1",
@@ -359,5 +445,69 @@ func (f *fakeAPI) serve(w http.ResponseWriter, r *http.Request) {
 			"after":     after,
 			"page_size": 250,
 		},
-	})).To(Succeed())
+	})
+}
+
+// serveIncidents pages like /v2/incidents: one incident per page, the next page starts
+// after the last incident returned, and pagination ends on an empty page.
+func (f *fakeAPI) serveIncidents(w http.ResponseWriter, r *http.Request) {
+	var page []map[string]any
+	switch r.URL.Query().Get("after") {
+	case "":
+		page = []map[string]any{fakeIncident("incident-1")}
+	case "incident-1":
+		f.mu.Lock()
+		restart := f.restartIncidents
+		f.restartIncidents = false
+		f.mu.Unlock()
+
+		if restart {
+			page = []map[string]any{fakeIncident("incident-1")}
+		} else {
+			page = []map[string]any{fakeIncident("incident-2")}
+		}
+	default:
+		page = []map[string]any{}
+	}
+
+	writeJSON(w, map[string]any{
+		"incidents": page,
+		"pagination_meta": map[string]any{
+			"page_size": 250,
+		},
+	})
+}
+
+func fakeIncident(id string) map[string]any {
+	return map[string]any{
+		"id":                        id,
+		"name":                      "An incident",
+		"reference":                 "INC-1",
+		"mode":                      "standard",
+		"visibility":                "public",
+		"permalink":                 "https://app.incident.io/incidents/1",
+		"slack_channel_id":          "C123",
+		"slack_team_id":             "T123",
+		"creator":                   map[string]any{},
+		"custom_field_entries":      []any{},
+		"incident_role_assignments": []any{},
+		"incident_timestamp_values": []any{},
+		"incident_status": map[string]any{
+			"id":       "status-1",
+			"name":     "Active",
+			"category": "live",
+			"rank":     1,
+		},
+		"incident_type": map[string]any{
+			"id":   "type-1",
+			"name": "Default",
+		},
+		"created_at": "2026-10-01T00:00:00Z",
+		"updated_at": "2026-10-08T00:00:00Z",
+	}
+}
+
+func writeJSON(w http.ResponseWriter, body any) {
+	w.Header().Set("Content-Type", "application/json")
+	Expect(json.NewEncoder(w).Encode(body)).To(Succeed())
 }

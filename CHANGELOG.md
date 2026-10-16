@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.9.0
 
 - The incidents stream now syncs incrementally on `updated_at`, like actions and
   follow-ups. With a bookmark, only incidents changed since that time are

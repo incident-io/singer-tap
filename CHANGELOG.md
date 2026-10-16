@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- The incidents stream now syncs incrementally on `updated_at`, like actions and
+  follow-ups. With a bookmark, only incidents changed since that time are
+  fetched, along with their attachments and updates. Discovery marks the stream
+  `INCREMENTAL`.
+- Fixed the incidents stream emitting incidents twice when the incident used as
+  the page cursor was deleted or changed mode mid-sync.
+
 ## v0.8.0
 
 - The actions and follow_ups streams now sync incrementally on `updated_at`.

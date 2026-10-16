@@ -24,9 +24,9 @@ following scope:
 
 ## incident.io Tap Replication
 
-The actions and follow_ups streams replicate incrementally on `updated_at`. The first sync loads every action and follow-up. Each later sync loads only the ones created or changed since the previous sync, and Stitch upserts them on `id`. To load everything again, reset replication for the integration.
+The actions, follow_ups and incidents streams replicate incrementally on `updated_at`. The first sync loads every action, follow-up and incident. Each later sync loads only the ones created or changed since the previous sync, and Stitch upserts them on `id`. To load everything again, reset replication for the integration.
 
-Actions and follow-ups deleted in incident.io are not removed from the destination by incremental syncs.
+Actions, follow-ups and incidents deleted in incident.io are not removed from the destination by incremental syncs.
 
 Every other stream performs a full table replication each time. The amount of data in those streams is relatively low, so this should not be an issue for most customers.
 
@@ -39,7 +39,7 @@ Every other stream performs a full table replication each time. The amount of da
 - Table name: incidents
 - Description: Incidents are a core resource, on which many other resources (actions, etc) are created. You will find incident specific actions, updates, timestamps etc nested on this resource.
 - Primary key column(s): id
-- Replication: full table
+- Replication: incremental, on updated_at
 - API documentation: [Incidents V2](https://api-docs.incident.io/tag/Incidents-V2)
 
 ### Actions

@@ -98,26 +98,27 @@ You can adjust which columns within a stream you wish to export similarly, by ad
 
 ## Incremental sync
 
-The actions and follow_ups streams sync incrementally on `updated_at`. Every
-other stream is a full sync on every run.
+The actions, follow_ups and incidents streams sync incrementally on
+`updated_at`. Every other stream is a full sync on every run.
 
 After each incremental stream finishes, the tap writes a `STATE` message to
 stdout with a bookmark for that stream:
 
 ```json
-{"type": "STATE", "value": {"bookmarks": {"actions": {"updated_at": "2026-10-09T09:00:00Z"}, "follow_ups": {"updated_at": "2026-10-09T09:00:01Z"}}}}
+{"type": "STATE", "value": {"bookmarks": {"actions": {"updated_at": "2026-10-09T09:00:00Z"}, "follow_ups": {"updated_at": "2026-10-09T09:00:01Z"}, "incidents": {"updated_at": "2026-10-09T09:00:02Z"}}}}
 ```
 
 Save the `value` of the last `STATE` message to a file and pass it back with
-`--state` on the next run. The tap then fetches only the actions and follow-ups
-created or changed since the bookmark:
+`--state` on the next run. The tap then fetches only the actions, follow-ups and
+incidents created or changed since the bookmark:
 
 ```console
 $ tap-incident --config=config.json --state=state.json
 ```
 
 Runners such as Stitch and Meltano save and pass the state for you. Without
-`--state`, the tap fetches every action and follow-up, as it does on a first run.
+`--state`, the tap fetches every action, follow-up and incident, as it does on a
+first run.
 
 Things to know:
 
@@ -126,8 +127,9 @@ Things to know:
 - Each run re-fetches up to two days of changes before the bookmark. The API
   filters on dates, so the tap goes back a day to be safe. The upsert makes
   these duplicates harmless.
-- Actions and follow-ups deleted in incident.io are never fetched again, so they
-  stay in your destination. Run without `--state` to reload everything.
+- Actions, follow-ups and incidents deleted in incident.io are never fetched
+  again, so they stay in your destination. Run without `--state` to reload
+  everything.
 - `id` and `updated_at` are always exported for these streams, even if your
   catalog deselects them.
 
@@ -138,7 +140,7 @@ Things to know:
 - Table name: incidents
 - Description: Incidents are a core resource, on which many other resources (actions, etc) are created. You will find incident specific actions, updates, timestamps etc nested on this resource.
 - Primary key column(s): id
-- Replication: full table
+- Replication: incremental, on updated_at
 - API documentation: [Incidents V2](https://api-docs.incident.io/tag/Incidents-V2)
 
 ### Actions

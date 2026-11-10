@@ -23,7 +23,7 @@ Once installed, see [documentation](docs) for example configurations.
 
 ## Using Docker
 
-[hub]: https://hub.docker.com/r/incidentio/singer-tap/tags
+[hub]: https://hub.docker.com/r/incidentio/tap-incident/tags
 
 A Docker image is available for containerised environments; see [Docker
 Hub][hub] for more details of the image and available tags.

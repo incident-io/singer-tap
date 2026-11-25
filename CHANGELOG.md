@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.1
+
+- Fixed the client never retrying failed requests. It was set to retry 3 times,
+  but a single 502 or timeout ended the run. 5xx and 429 responses are now
+  retried up to 3 times. 4xx responses are still not retried.
+
 ## v0.9.0
 
 - The incidents stream now syncs incrementally on `updated_at`, like actions and

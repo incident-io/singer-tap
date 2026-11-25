@@ -4,7 +4,9 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/incident-io/singer-tap/client"
 
@@ -14,22 +16,34 @@ import (
 
 var _ = Describe("New", func() {
 	var (
-		ctx      context.Context
-		server   *httptest.Server
-		requests atomic.Int32
-		statuses []int
+		ctx        context.Context
+		server     *httptest.Server
+		requests   atomic.Int32
+		statuses   []int
+		retryAfter string
+		mu         sync.Mutex
+		arrivals   []time.Time
 	)
 
 	BeforeEach(func() {
 		ctx = context.Background()
 		requests.Store(0)
 		statuses = nil
+		retryAfter = ""
+		arrivals = nil
 
 		server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			mu.Lock()
+			arrivals = append(arrivals, time.Now())
+			mu.Unlock()
+
 			attempt := int(requests.Add(1)) - 1
 			status := statuses[min(attempt, len(statuses)-1)]
 
 			w.Header().Set("Content-Type", "application/json")
+			if status == http.StatusTooManyRequests && retryAfter != "" {
+				w.Header().Set("Retry-After", retryAfter)
+			}
 			w.WriteHeader(status)
 			if status == http.StatusOK {
 				_, _ = w.Write([]byte(`{"severities":[]}`))
@@ -79,6 +93,30 @@ var _ = Describe("New", func() {
 			err := listSeverities()
 			Expect(err).To(MatchError(ContainSubstring("status 502: upstream connect error")))
 			Expect(requests.Load()).To(BeNumerically("==", 4))
+		})
+	})
+
+	When("the API returns a 429", func() {
+		BeforeEach(func() {
+			statuses = []int{http.StatusTooManyRequests, http.StatusOK}
+		})
+
+		It("waits before it retries", func() {
+			Expect(listSeverities()).To(Succeed())
+			Expect(arrivals).To(HaveLen(2))
+			Expect(arrivals[1].Sub(arrivals[0])).To(BeNumerically(">=", time.Second))
+		})
+
+		When("the response has a Retry-After header", func() {
+			BeforeEach(func() {
+				retryAfter = "2"
+			})
+
+			It("waits for that long before it retries", func() {
+				Expect(listSeverities()).To(Succeed())
+				Expect(arrivals).To(HaveLen(2))
+				Expect(arrivals[1].Sub(arrivals[0])).To(BeNumerically(">=", 2*time.Second))
+			})
 		})
 	})
 

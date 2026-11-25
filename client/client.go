@@ -18,14 +18,21 @@ func New(ctx context.Context, apiKey, apiEndpoint, version string, opts ...incid
 	retryClient := retryablehttp.NewClient()
 	retryClient.RetryMax = 3
 	retryClient.Logger = nil
+	retryClient.HTTPClient = &http.Client{Transport: cleanhttp.DefaultTransport()}
+	// Return the last response once retries run out, so the error below keeps its
+	// status and body.
+	retryClient.ErrorHandler = retryablehttp.PassthroughErrorHandler
 
 	base := retryClient.StandardClient()
 
 	// The SDK signals a failed request with a nil JSON200 rather than an error, and
-	// the streams dereference JSON200 directly, so turn it into an error here.
-	base.Transport = Wrap(cleanhttp.DefaultTransport(), func(req *http.Request, next http.RoundTripper) (*http.Response, error) {
+	// the streams dereference JSON200 directly, so turn it into an error here. Wrap the
+	// retry transport rather than replace it, so 5xx and 429 responses are retried first.
+	base.Transport = Wrap(base.Transport, func(req *http.Request, next http.RoundTripper) (*http.Response, error) {
 		resp, err := next.RoundTrip(req)
 		if err == nil && resp.StatusCode > 299 {
+			defer resp.Body.Close()
+
 			data, err := io.ReadAll(resp.Body)
 			if err != nil {
 				return nil, fmt.Errorf("status %d: no response body", resp.StatusCode)
